@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const minimist = require('minimist');
 const {GwaServer} = require('./server');
 const {getJsonOptions} = require('./options');

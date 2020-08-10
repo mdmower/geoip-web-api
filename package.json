@@ -1,11 +1,14 @@
 {
   "name": "geoip-web-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An AMP-GEO compatible location web API",
   "main": "app.js",
   "scripts": {
     "debug": "node --nolazy app.js",
     "start": "node app.js"
+  },
+  "bin": {
+    "geoip-web-api": "./src/cmd.js"
   },
   "repository": {
     "type": "git",
