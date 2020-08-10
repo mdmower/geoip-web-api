@@ -1,0 +1,37 @@
+{
+  "name": "geoip-web-api",
+  "version": "1.0.0",
+  "description": "An AMP-GEO compatible location web API",
+  "main": "app.js",
+  "scripts": {
+    "debug": "node --nolazy app.js",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdmower/geoip-web-api.git"
+  },
+  "keywords": [
+    "geoip",
+    "amp-geo",
+    "location",
+    "maxmind"
+  ],
+  "author": "Matt Mower <mdmower@cmphys.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mdmower/geoip-web-api/issues"
+  },
+  "homepage": "https://github.com/mdmower/geoip-web-api#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "maxmind": "^4.1.4"
+  },
+  "devDependencies": {
+    "eslint": "^7.6.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-jsdoc": "^30.2.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "^2.0.5"
+  }
+}

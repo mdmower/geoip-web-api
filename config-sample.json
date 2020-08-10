@@ -1,0 +1,15 @@
+{
+  "logLevel": 1,
+  "port": 8080,
+  "getHeaders": {
+    "cache-control": "private, max-age=3600",
+    "X-Content-Type-Options": "nosniff"
+  },
+  "cors": {
+    "origins": ["http://example.com", "http://example.net"],
+    "originRegEx": "^https://[a-z0-9\\-]+\\.example\\.(com|net)$"
+  },
+  "maxmind": {
+    "dbPath": "/path/to/GeoLite2-City.mmdb"
+  }
+}
