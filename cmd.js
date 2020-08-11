@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 const minimist = require('minimist');
-const {GwaServer} = require('./server');
-const {getJsonOptions} = require('./options');
+const {GwaServer} = require('./src/server');
+const {getJsonOptions} = require('./src/options');
 
 /** @constant */
 const LOG_TAG = 'GwaCmd';

@@ -4,11 +4,11 @@
   "description": "An AMP-GEO compatible location web API",
   "main": "app.js",
   "scripts": {
-    "debug": "node --nolazy app.js",
-    "start": "node app.js"
+    "debug": "node --nolazy cmd.js",
+    "start": "node cmd.js"
   },
   "bin": {
-    "geoip-web-api": "./src/cmd.js"
+    "geoip-web-api": "cmd.js"
   },
   "repository": {
     "type": "git",

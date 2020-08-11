@@ -54,7 +54,7 @@ All properties are optional, provided the defaults are suitable.
 }
 ```
 
-If `cors.origins` and/or `cors.originRegEx` is available and the incoming request has an `Origin` HTTP header that satisfies one of these tests (in `cors.origins` array or satisfies `cors.originRegEx` RegEx test), then an `Access-Control-Allow-Origin` header will be appended to the response with value equal to the `Origin` header. Note that if `cors.originRegEx` is available as a string, the `RegExp` object will be built with `new RegExp(cors.originRegEx, 'i')`.
+If `cors.origins` and/or `cors.originRegEx` is available and the incoming request has an `Origin` HTTP header that satisfies one of these tests (is in `cors.origins` array or satisfies `cors.originRegEx` RegEx test), then an `Access-Control-Allow-Origin` header will be appended to the response with value equal to the `Origin` header. Note that if `cors.originRegEx` is available as a string, the `RegExp` object will be built with `new RegExp(cors.originRegEx, 'i')`.
 
 If `getHeaders` is available, the default set is removed and only the headers in options are appended to responses. Some response headers are generated automatically, like `Content-Type` and `Content-Length`.
 
@@ -108,7 +108,7 @@ let isRunning = gwaServer.isRunning();
 
 ## HTTP response
 
-JSON response body conforms to [AMP-GEO fallback API schema 0.2](https://github.com/mdmower/amphtml/blob/87474da35f63f6d995c78a323366a71e7624f9e1/extensions/amp-geo/0.1/amp-geo.js#L286-L307)
+JSON response body conforms to [AMP-GEO fallback API schema 0.2](https://github.com/ampproject/amphtml/blob/f744c490be41f2553b24cb9f0f0efb5136477e79/extensions/amp-geo/0.1/amp-geo.js#L286-L307)
 
 ```JSON
 {
