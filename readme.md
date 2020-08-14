@@ -152,7 +152,7 @@ The HTTP server ([Express](https://expressjs.com/)) in this module is designed t
 
 ### Sample Nginx location block
 
-Listen for requests to `/geoip/` on port `8080`:
+Listen for requests to `/geoip/` and forward to localhost port `8080`:
 
 ```Nginx
 location ~ ^/geoip/ {
