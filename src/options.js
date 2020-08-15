@@ -101,7 +101,7 @@ function overlayOptions(src, target) {
 }
 
 /**
- * Import custom configuration and overlay options
+ * Import custom configuration
  * @param {string} path Path to custom configuration file
  * @returns {object}
  */

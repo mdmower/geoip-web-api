@@ -32,7 +32,7 @@ class GwaMaxMind {
      */
     this.log_ = log || new GwaLog();
 
-    this.assertDbPath(options.dbPath);
+    assertDbPath(options.dbPath);
 
     /**
      * @type {string}
@@ -45,18 +45,6 @@ class GwaMaxMind {
      * @private
      */
     this.dbReader_ = undefined;
-  }
-
-  /**
-   * Assert database path exists and is readable
-   * @param {string} dbPath Filesystem path to MaxMind database
-   * @private
-   */
-  assertDbPath(dbPath) {
-    if (typeof dbPath !== 'string' || !dbPath) {
-      throw new Error('MaxMind database path must be specified');
-    }
-    fs.accessSync(dbPath, fs.constants.R_OK);
   }
 
   /**
@@ -148,4 +136,16 @@ class GwaMaxMind {
   }
 }
 
-module.exports = {GwaMaxMind};
+/**
+ * Assert database path exists and is readable
+ * @param {string} dbPath Filesystem path to MaxMind database
+ * @private
+ */
+function assertDbPath(dbPath) {
+  if (typeof dbPath !== 'string' || !dbPath) {
+    throw new Error('MaxMind database path must be specified');
+  }
+  fs.accessSync(dbPath, fs.constants.R_OK);
+}
+
+module.exports = {assertDbPath, GwaMaxMind};
