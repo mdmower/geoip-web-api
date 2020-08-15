@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const minimist = require('minimist');
+const readline = require('readline');
 const {GwaServer} = require('./src/server');
 const {assertPath, expandTildePath} = require('./src/utils');
 const {getDefaultOptions, getJsonOptions} = require('./src/options');
@@ -35,5 +36,22 @@ try {
   process.exit(1);
 }
 
+process.on('SIGINT', () => {
+  process.exit(0);
+});
+
+if (process.platform === 'win32') {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  rl.on('SIGINT', function () {
+    process.emit('SIGINT');
+  });
+}
+
 const gwaServer = new GwaServer(options);
-gwaServer.start();
+gwaServer.start().then(() => {
+  console.log(`[${LOG_TAG}] Type CTRL+C to exit`);
+});
