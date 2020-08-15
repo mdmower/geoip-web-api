@@ -1,6 +1,6 @@
 {
   "name": "geoip-web-api",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "An AMP-GEO compatible location web API",
   "main": "app.js",
   "scripts": {
