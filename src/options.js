@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const {LogLevel} = require('./log');
+const {expandTildePath} = require('./utils');
 
 /** @constant */
 const LOG_TAG = 'GwaOptions';
@@ -93,7 +94,7 @@ function overlayOptions(src, target) {
   // MaxMind properties
   if (src.maxmind && typeof src.maxmind === 'object') {
     if (src.maxmind.dbPath && typeof src.maxmind.dbPath === 'string') {
-      target.maxmind.dbPath = src.maxmind.dbPath;
+      target.maxmind.dbPath = expandTildePath(src.maxmind.dbPath);
     }
   }
 

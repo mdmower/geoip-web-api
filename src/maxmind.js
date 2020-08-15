@@ -1,6 +1,6 @@
-const fs = require('fs');
 const maxmind = require('maxmind');
 const {GwaLog} = require('./log');
+const {assertPath} = require('./utils');
 
 /** @constant */
 const LOG_TAG = 'GwaMaxMind';
@@ -32,7 +32,7 @@ class GwaMaxMind {
      */
     this.log_ = log || new GwaLog();
 
-    assertDbPath(options.dbPath);
+    assertPath(options.dbPath);
 
     /**
      * @type {string}
@@ -136,16 +136,4 @@ class GwaMaxMind {
   }
 }
 
-/**
- * Assert database path exists and is readable
- * @param {string} dbPath Filesystem path to MaxMind database
- * @private
- */
-function assertDbPath(dbPath) {
-  if (typeof dbPath !== 'string' || !dbPath) {
-    throw new Error('MaxMind database path must be specified');
-  }
-  fs.accessSync(dbPath, fs.constants.R_OK);
-}
-
-module.exports = {assertDbPath, GwaMaxMind};
+module.exports = {GwaMaxMind};

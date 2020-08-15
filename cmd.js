@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
 const minimist = require('minimist');
 const {GwaServer} = require('./src/server');
-const {assertDbPath} = require('./src/maxmind');
+const {assertPath, expandTildePath} = require('./src/utils');
 const {getDefaultOptions, getJsonOptions} = require('./src/options');
 
 /** @constant */
@@ -24,9 +23,13 @@ if (argv.config) {
 
 // Verify database available and exit early if not
 const dbPath =
-  (options && options.maxmind && options.maxmind.dbPath) || getDefaultOptions().maxmind.dbPath;
+  (options &&
+    options.maxmind &&
+    options.maxmind.dbPath &&
+    expandTildePath(options.maxmind.dbPath)) ||
+  getDefaultOptions().maxmind.dbPath;
 try {
-  assertDbPath(dbPath);
+  assertPath(dbPath);
 } catch (ex) {
   console.error(`[${LOG_TAG}] Could not read database at ${dbPath}`);
   process.exit(1);
