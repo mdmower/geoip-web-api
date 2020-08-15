@@ -16,8 +16,16 @@ This module uses [node-maxmind](https://github.com/runk/node-maxmind) for the da
 
 This module has been tested with Node.js 10, 12, and 14. Feel free to try other versions, but additional support is not promised.
 
+Local installation
+
 ```
 npm install geoip-web-api
+```
+
+Global installation
+
+```
+npm install -g geoip-web-api
 ```
 
 ## Options
@@ -84,9 +92,24 @@ When running this module as a command line application, these options should be 
 
 ### Command line
 
+If installed globally:
+
 ```bash
-$ npm install -g geoip-web-api
-$ geoip-web-api --config="/path/to/config.json"
+geoip-web-api --config="/path/to/config.json"
+```
+
+If installed locally:
+
+```bash
+# Launch with npm
+npm start -- --config="/path/to/config.json"
+```
+
+or
+
+```bash
+# Launch with node
+node cmd.js --config="/path/to/config.json"
 ```
 
 ### Node.js
