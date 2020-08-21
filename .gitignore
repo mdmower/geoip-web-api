@@ -104,5 +104,6 @@ dist
 .tern-port
 
 # Custom
+lib/
 .vscode/
 GeoLite2-*.mmdb

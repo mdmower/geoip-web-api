@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2018"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "ES2015",
+    "allowJs": true,
+    "checkJs": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "noImplicitAny": false,
+    "outDir": "lib"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.js"]
+}

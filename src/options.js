@@ -10,7 +10,7 @@ const LOG_TAG = 'GwaOptions';
  * @typedef AppOptions
  * @property {number} logLevel Log level (0:Off, 1:Error, 2:Warn, 3:Info, 4:Debug)
  * @property {number} port Port where HTTP server should listen
- * @property {Object<string, string>} getHeaders Dictionary of HTTP response headers for GET requests
+ * @property {Object.<string, string>} getHeaders Dictionary of HTTP response headers for GET requests
  * @property {Object} cors Allowed CORS origin tests
  * @property {?Array<string>} cors.origins Array of allowed CORS origins
  * @property {?(RegExp|string)} cors.originRegEx RegEx test for allowed CORS origins
@@ -43,14 +43,14 @@ function getDefaultOptions() {
 
 /**
  * Safely overlay values in target options object with src options object
- * @param {Object} src Source options
+ * @param {Object.<string, any> | undefined} src Source options
  * @param {AppOptions} target Target options
  * @returns {AppOptions}
  * @private
  */
 function overlayOptions(src, target) {
-  if (!src || typeof src !== 'object' || !target || typeof target !== 'object') {
-    return;
+  if (!src || typeof src !== 'object') {
+    return target;
   }
 
   // Log level
@@ -60,11 +60,11 @@ function overlayOptions(src, target) {
 
   // Only set HTTP server port if a valid value is available
   if (src.port > 0) {
-    target.port = src.port;
+    target.port = Math.floor(src.port);
   }
 
   // If getHeaders is specified, clear default headers
-  if (src.getHeaders) {
+  if (src.getHeaders && typeof src.getHeaders === 'object') {
     target.getHeaders = {};
 
     // Only allow string header keys/values
@@ -104,7 +104,7 @@ function overlayOptions(src, target) {
 /**
  * Import custom configuration
  * @param {string} path Path to custom configuration file
- * @returns {object}
+ * @returns {Object.<string, any>}
  */
 function getJsonOptions(path) {
   if (!path || typeof path !== 'string') {

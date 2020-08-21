@@ -1,6 +1,5 @@
 const {GwaLog} = require('./log');
-
-const URL = require('url').URL;
+const {URL} = require('url');
 
 /** @constant */
 const LOG_TAG = 'GwaCors';
@@ -14,19 +13,16 @@ class GwaCors {
    */
   constructor(options, log) {
     /**
-     * @type {GwaLog}
      * @private
      */
-    this.log_ = log || new GwaLog();
+    this.log_ = log;
 
     /**
-     * @type {?Array<string>}
      * @private
      */
     this.origins_ = this.sanitizeOrigins(options.origins);
 
     /**
-     * @type {?RegExp}
      * @private
      */
     this.originRegEx_ = this.parseOriginsRegEx(options.originRegEx);
@@ -43,7 +39,7 @@ class GwaCors {
     }
 
     const sanitizedOrigins = origins
-      .map((o) => typeof o === 'string' && o.trim())
+      .map((o) => o.trim())
       .filter(Boolean)
       .map((o) => {
         try {
@@ -51,6 +47,7 @@ class GwaCors {
         } catch (ex) {
           this.log_.error(`[${LOG_TAG}] Invalid origin ${o}\n`, ex);
         }
+        return '';
       })
       .filter(Boolean);
 
@@ -100,8 +97,8 @@ class GwaCors {
   isCorsOrigin(origin) {
     return (
       Boolean(origin) &&
-      ((this.origins_ && this.origins_.includes(origin)) ||
-        (this.originRegEx_ && this.originRegEx_.test(origin)))
+      ((Array.isArray(this.origins_) && this.origins_.includes(origin)) ||
+        (this.originRegEx_ != null && this.originRegEx_.test(origin)))
     );
   }
 

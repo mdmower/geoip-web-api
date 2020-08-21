@@ -2,12 +2,12 @@
 
 const minimist = require('minimist');
 const readline = require('readline');
-const {GwaServer} = require('./src/server');
-const {assertPath, expandTildePath} = require('./src/utils');
-const {getDefaultOptions, getJsonOptions} = require('./src/options');
+const {GwaServer} = require('./server');
+const {assertPath, expandTildePath} = require('./utils');
+const {getDefaultOptions, getJsonOptions} = require('./options');
 
 /** @constant */
-const LOG_TAG = 'GwaCmd';
+const LOG_TAG = 'GwaCli';
 
 // Import custom config options
 let options;
@@ -47,7 +47,7 @@ if (process.platform === 'win32') {
   });
 
   rl.on('SIGINT', function () {
-    process.emit('SIGINT');
+    process.exit(0);
   });
 }
 

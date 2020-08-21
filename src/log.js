@@ -11,46 +11,53 @@ const LogLevel = {
 
 class GwaLog {
   /**
-   * @param {LogLevel} level Log level
+   * @param {LogLevel | undefined} level Log level
    */
   constructor(level) {
-    /** @type {LogLevel} */
-    this.level_ = Object.values(LogLevel).includes(level) ? level : LogLevel.INFO;
+    /**
+     * @private
+     */
+    this.level_ =
+      level !== undefined && Object.values(LogLevel).includes(level) ? level : LogLevel.INFO;
   }
 
   /**
    * Log debug message
+   * @param {...*} args Arguments for console.debug
    */
-  debug() {
+  debug(...args) {
     if (this.level_ >= LogLevel.DEBUG) {
-      console.debug.apply(console, arguments);
+      console.debug(...args);
     }
   }
 
   /**
    * Log info message
+   * @param {...*} args Arguments for console.info
    */
-  info() {
+  info(...args) {
     if (this.level_ >= LogLevel.INFO) {
-      console.log.apply(console, arguments);
+      console.log(...args);
     }
   }
 
   /**
    * Log warning message
+   * @param {...*} args Arguments for console.warn
    */
-  warn() {
+  warn(...args) {
     if (this.level_ >= LogLevel.WARN) {
-      console.warn.apply(console, arguments);
+      console.warn(...args);
     }
   }
 
   /**
    * Log error message
+   * @param {...*} args Arguments for console.error
    */
-  error() {
+  error(...args) {
     if (this.level_ >= LogLevel.ERROR) {
-      console.error.apply(console, arguments);
+      console.error(...args);
     }
   }
 

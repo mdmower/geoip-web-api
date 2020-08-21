@@ -14,12 +14,12 @@ function expandTildePath(path) {
 
   // /home/user
   if (path.length === 1) {
-    return homedir;
+    return homedir();
   }
 
   // /home/user/...
   if (path[1] === '/') {
-    return homedir + path.slice(1);
+    return homedir() + path.slice(1);
   }
 
   // You don't seriously expect applications to support

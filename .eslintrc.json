@@ -24,5 +24,10 @@
         "noDefaults": true
       }
     ]
+  },
+  "settings": {
+    "jsdoc": {
+      "mode": "typescript"
+    }
   }
 }

@@ -2,9 +2,6 @@ const maxmind = require('maxmind');
 const {GwaLog} = require('./log');
 const {assertPath} = require('./utils');
 
-/** @constant */
-const LOG_TAG = 'GwaMaxMind';
-
 /**
  * AMP-GEO fallback API compatible response conforming to JSON schema version 0.2
  * @typedef {Object} GeoApiResponse
@@ -19,6 +16,9 @@ const LOG_TAG = 'GwaMaxMind';
  * @property {?GeoApiResponse} geoApiResponse AMP-GEO fallback API compatible response
  */
 
+/** @constant */
+const LOG_TAG = 'GwaMaxMind';
+
 class GwaMaxMind {
   /**
    * @param {Object} options MaxMind database and reader options
@@ -27,30 +27,27 @@ class GwaMaxMind {
    */
   constructor(options, log) {
     /**
-     * @type {GwaLog}
      * @private
      */
-    this.log_ = log || new GwaLog();
+    this.log_ = log;
 
     assertPath(options.dbPath);
 
     /**
-     * @type {string}
      * @private
      */
     this.dbPath_ = options.dbPath;
 
     /**
-     * @type {object}
      * @private
      */
-    this.dbReader_ = undefined;
+    this.dbReader_ = null;
   }
 
   /**
    * Open MaxMind database and get reader
    * @param {string} dbPath Filesystem path to MaxMind database
-   * @returns {object} Database reader
+   * @returns {Promise<void>} Database reader
    * @private
    */
   async loadDbReader(dbPath) {
@@ -84,6 +81,9 @@ class GwaMaxMind {
 
     if (!this.dbReader_) {
       await this.loadDbReader(this.dbPath_);
+    }
+    if (!this.dbReader_) {
+      throw new Error('loadDbReader completed without populating dbReader');
     }
 
     if (!maxmind.validate(ip)) {

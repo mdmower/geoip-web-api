@@ -62,11 +62,11 @@ All properties are optional, provided the defaults are suitable.
 }
 ```
 
-If `cors.origins` and/or `cors.originRegEx` is available and the incoming request has an `Origin` HTTP header that satisfies one of these tests (is in `cors.origins` array or satisfies `cors.originRegEx` RegEx test), then an `Access-Control-Allow-Origin` header will be appended to the response with value equal to the `Origin` header. Note that if `cors.originRegEx` is available as a string, the `RegExp` object will be built with `new RegExp(cors.originRegEx, 'i')`.
-
 If `getHeaders` is available, the default set is removed and only the headers in options are appended to responses. Some response headers are generated automatically, like `Content-Type` and `Content-Length`.
 
-When running this module as a command line application, these options should be saved in a JSON configuration file whose path is passed to the application with argument `--config`. When using this module in your own Node.js application, these options should be passed to the `GwaServer` constructor. See Usage section below.
+If `cors.origins` and/or `cors.originRegEx` is available and the incoming request has an `Origin` HTTP header that satisfies one of these tests (is in `cors.origins` array or satisfies `cors.originRegEx` RegEx test), then an `Access-Control-Allow-Origin` header will be appended to the response with value equal to the `Origin` header. Note that if `cors.originRegEx` is available as a string, the `RegExp` object will be built with `new RegExp(cors.originRegEx, 'i')`.
+
+When running this module as a command line application, these options should be saved in a JSON configuration file whose path is passed to the application with argument `--config`. When using this module in your own Node.js application, these options should be passed to the `GeoIpWebApi` constructor. See Usage section below.
 
 ### Example options
 
@@ -90,7 +90,7 @@ When running this module as a command line application, these options should be 
 
 ## Usage
 
-### Command line
+### Command line interface
 
 If installed globally:
 
@@ -101,32 +101,24 @@ geoip-web-api --config="/path/to/config.json"
 If installed locally:
 
 ```bash
-# Launch with npm
-npm start -- --config="/path/to/config.json"
+npx geoip-web-api --config="/path/to/config.json"
 ```
 
-or
-
-```bash
-# Launch with node
-node cmd.js --config="/path/to/config.json"
-```
-
-### Node.js
+### Node.js module
 
 ```JavaScript
-const GwaServer = require('geoip-web-api');
+const GeoIpWebApi = require('geoip-web-api');
 const options = {...};
-const gwaServer = new GwaServer(options);
+const geoIpWebApi = new GeoIpWebApi(options);
 
 // Start HTTP server
-await gwaServer.start();
+await geoIpWebApi.start();
 
 // Stop HTTP server
-await gwaServer.stop();
+await geoIpWebApi.stop();
 
 // Check whether HTTP server is running
-let isRunning = gwaServer.isRunning();
+let isRunning = geoIpWebApi.isRunning();
 ```
 
 ## HTTP response

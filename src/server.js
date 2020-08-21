@@ -9,43 +9,36 @@ const LOG_TAG = 'GwaServer';
 
 class GwaServer {
   /**
-   * @param {object} options Application options that should overlay default options
+   * @param {Object.<string, any> | undefined} options User options that should overlay default options
    */
   constructor(options) {
-    options = options ? overlayOptions(options, getDefaultOptions()) : getDefaultOptions();
+    const appOptions = overlayOptions(options, getDefaultOptions());
 
     /**
-     * @type {GwaLog}
      * @private
      */
-    this.log_ = new GwaLog(options.logLevel);
-
-    // Set log level now that options are available
-    this.log_.debug(`[${LOG_TAG}] Application options applied:\n`, options);
+    this.log_ = new GwaLog(appOptions.logLevel);
+    this.log_.debug(`[${LOG_TAG}] Application options applied:\n`, appOptions);
 
     /**
-     * @type {GwaCors}
      * @private
      */
-    this.cors_ = new GwaCors(options.cors || {}, this.log_);
+    this.cors_ = new GwaCors(appOptions.cors || {}, this.log_);
 
     /**
-     * @type {GwaMaxMind}
      * @private
      */
-    this.maxmind_ = new GwaMaxMind(options.maxmind || {}, this.log_);
+    this.maxmind_ = new GwaMaxMind(appOptions.maxmind || {}, this.log_);
 
     /**
-     * @type {number}
      * @private
      */
-    this.port_ = options.port || 3000;
+    this.port_ = appOptions.port || 3000;
 
     /**
-     * @type {Object<string, string>}
      * @private
      */
-    this.getHeaders_ = options.getHeaders || {};
+    this.getHeaders_ = appOptions.getHeaders || {};
 
     /**
      * @private
@@ -92,14 +85,14 @@ class GwaServer {
     res.set(this.getHeaders_);
 
     // Set CORS headers
-    res.set(this.cors_.getCorsHeaders(req.get('origin')));
+    res.set(this.cors_.getCorsHeaders(req.get('origin') || ''));
 
     res.json(geoApiResponse);
   }
 
   /**
    * Initialize Express server and start listeners
-   * @returns {Promise} Resolves when server listeners have started
+   * @returns {Promise<void>} Resolves when server listeners have started
    */
   async start() {
     if (this.server_) {
@@ -120,7 +113,7 @@ class GwaServer {
 
   /**
    * Stop Express server
-   * @returns {Promise} Resolves when server listeners have stopped
+   * @returns {Promise<void>} Resolves when server listeners have stopped
    */
   async stop() {
     if (!this.server_) {
@@ -128,8 +121,9 @@ class GwaServer {
       return;
     }
 
+    const thisServer_ = this.server_;
     return new Promise((resolve) => {
-      this.server_.close(() => {
+      thisServer_.close(() => {
         this.log_.info(`[${LOG_TAG}] Stopped listening at http://localhost:${this.port_}`);
 
         this.server_ = undefined;
