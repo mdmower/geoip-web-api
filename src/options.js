@@ -64,7 +64,7 @@ function overlayOptions(src, target) {
   }
 
   // If getHeaders is specified, clear default headers
-  if (src.getHeaders && typeof src.getHeaders === 'object') {
+  if (src.getHeaders instanceof Object) {
     target.getHeaders = {};
 
     // Only allow string header keys/values
@@ -76,11 +76,14 @@ function overlayOptions(src, target) {
   }
 
   // CORS properties are null by default, so only modify if good values are found
-  if (src.cors && typeof src.cors === 'object') {
-    if (Array.isArray(src.cors.origins)) {
+  if (src.cors instanceof Object) {
+    const origins = src.cors.origins;
+    if (Array.isArray(origins)) {
       // Filter out non-string and empty values.
       // URL validity will be checked in Cors class.
-      target.cors.origins = src.cors.origins.filter((o) => o && typeof o === 'string');
+      target.cors.origins = origins
+        .map((o) => (typeof o === 'string' ? o.trim() : ''))
+        .filter(Boolean);
     }
 
     if (
@@ -92,7 +95,7 @@ function overlayOptions(src, target) {
   }
 
   // MaxMind properties
-  if (src.maxmind && typeof src.maxmind === 'object') {
+  if (src.maxmind instanceof Object) {
     if (src.maxmind.dbPath && typeof src.maxmind.dbPath === 'string') {
       target.maxmind.dbPath = expandTildePath(src.maxmind.dbPath);
     }
