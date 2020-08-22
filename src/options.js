@@ -10,7 +10,7 @@ const LOG_TAG = 'GwaOptions';
  * @typedef AppOptions
  * @property {number} logLevel Log level (0:Off, 1:Error, 2:Warn, 3:Info, 4:Debug)
  * @property {number} port Port where HTTP server should listen
- * @property {boolean} echoIp Whether request IP should be included in response
+ * @property {Object.<string, boolean>} enabledOutputs Individual outputs that should be included in the response
  * @property {Object.<string, string>} getHeaders Dictionary of HTTP response headers for GET requests
  * @property {Array<string>} getPaths Array of paths to match for GET requests
  * @property {Object} cors Allowed CORS origin tests
@@ -30,10 +30,14 @@ function getDefaultOptions() {
   return {
     logLevel: LogLevel.INFO,
     port: 3000,
-    echoIp: false,
-    getHeaders: {
-      'Cache-Control': 'private, max-age=1800',
+    enabledOutputs: {
+      country: true,
+      subdivision: true,
+      ip: false,
+      ip_version: false,
+      data: false,
     },
+    getHeaders: {},
     getPaths: ['/', '/*'],
     cors: {
       origins: null,
@@ -46,14 +50,14 @@ function getDefaultOptions() {
 }
 
 /**
- * Safely overlay values in target options object with src options object
+ * Safely overlay values in default options object with src options object
  * @param {Object.<string, any> | undefined} src Source options
- * @param {AppOptions} target Target options
  * @returns {AppOptions}
  * @private
  */
-function overlayOptions(src, target) {
-  if (!src || typeof src !== 'object') {
+function overlayOptions(src) {
+  const target = getDefaultOptions();
+  if (!(src instanceof Object)) {
     return target;
   }
 
@@ -67,9 +71,16 @@ function overlayOptions(src, target) {
     target.port = Math.floor(src.port);
   }
 
-  // Echo IP in response
-  if (typeof src.echoIp === 'boolean') {
-    target.echoIp = src.echoIp;
+  // Enabled outputs
+  if (src.enabledOutputs instanceof Object) {
+    const knownOutputs = Object.keys(target.enabledOutputs);
+    Object.keys(src.enabledOutputs)
+      .filter((output) => knownOutputs.includes(output))
+      .forEach((output) => {
+        if (typeof src.enabledOutputs[output] === 'boolean') {
+          target.enabledOutputs[output] = src.enabledOutputs[output];
+        }
+      });
   }
 
   // If getHeaders is specified, clear default headers

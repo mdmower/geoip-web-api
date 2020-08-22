@@ -1,7 +1,10 @@
 {
   "logLevel": 1,
   "port": 8080,
-  "echoIp": false,
+  "enabledOutputs": {
+    "ip": true,
+    "data": true
+  },
   "getHeaders": {
     "cache-control": "private, max-age=3600",
     "X-Content-Type-Options": "nosniff"

@@ -1,6 +1,6 @@
 # geoip-web-api
 
-A web API for IP-based geolocation at the [country](https://en.wikipedia.org/wiki/ISO_3166-1) level with optional [subdivision](https://en.wikipedia.org/wiki/ISO_3166-2) support. Both IPv4 and IPv6 are supported. Suitable for use as an [amp-geo fallback](https://github.com/ampproject/amphtml/blob/master/spec/amp-framework-hosting.md#amp-geo-fallback-api) when self-hosting the AMP framework.
+A web API for IP-based geolocation. Both IPv4 and IPv6 are supported. Suitable for use as an [amp-geo fallback](https://github.com/ampproject/amphtml/blob/master/spec/amp-framework-hosting.md#amp-geo-fallback-api) when self-hosting the AMP framework.
 
 ## GeoIP database and reader
 
@@ -40,27 +40,31 @@ All properties are optional, provided the defaults are suitable.
   // {number} Port where HTTP server should listen
   "port": 3000,
 
-  // {boolean} Whether request IP should be included in response
-  "echoIp": false,
+  // {Object.<string, boolean>} Enabled output values (see HTTP response section)
+  "enabledOutputs": {
+    "country": true,
+    "subdivision": true,
+    "ip": false,
+    "ip_version": false,
+    "data": false
+  },
 
   // {Object.<string, string>} Dictionary of HTTP response headers for GET requests
-  "getHeaders": {
-    "cache-control": "private, max-age=1800"
-  },
+  "getHeaders": {},
 
   // {Array<string>} Array of GET paths to which HTTP server should respond
   "getPaths": ['/', '/*'],
 
-  // {Object} Allowed CORS origin tests
+  // {Object} Allowed cross-origin requests (CORS)
   "cors": {
-    // {Array<string>} Array of allowed CORS origins
+    // {Array<string>} Array of allowed CORS origins (exact match)
     "origins": null,
 
     // {RegEx|string} RegEx test for allowed CORS origins
     "originRegEx": null
   },
 
-  // {Object} MaxMind database and reader options
+  // {Object.<string, string>} MaxMind database and reader options
   "maxmind": {
     // {string} Filesystem path to MaxMind country or city database
     "dbPath": path.join(process.cwd(), 'GeoLite2-Country.mmdb')
@@ -68,11 +72,15 @@ All properties are optional, provided the defaults are suitable.
 }
 ```
 
-If `getHeaders` is available, the default set is removed and only the headers in options are appended to responses. Some response headers are generated automatically, like `Content-Type` and `Content-Length`.
+**Additional information**
 
-If `getPaths` is available, the default set is removed and only the paths in options are used to define routes to which server should respond. See Express [Route paths](https://expressjs.com/en/guide/routing.html#route-paths) documentation for allowed route patterns. Notice that the defaul configuration matches requests to any path.
+- `enabledOutputs` - If an output is enabled but is not supported by the database, it will not be output in the final response.
 
-If `cors.origins` and/or `cors.originRegEx` is available and the incoming request has an `Origin` HTTP header that satisfies one of these tests (is in `cors.origins` array or satisfies `cors.originRegEx` RegEx test), then an `Access-Control-Allow-Origin` header will be appended to the response with value equal to the `Origin` header. Note that if `cors.originRegEx` is available as a string, the `RegExp` object will be built with `new RegExp(cors.originRegEx, 'i')`.
+- `getHeaders` - Some response headers like `Content-Type` and `Content-Length` are generated automatically. Some headers like `Server` can be removed by setting their values to `null`.
+
+- `getPaths` - See Express [Route paths](https://expressjs.com/en/guide/routing.html#route-paths) documentation for allowed route patterns. Notice that the default configuration matches requests to any path.
+
+- `cors.origins` and `cors.originRegEx` - If the incoming request has an `Origin` HTTP header that satisfies one of these tests (is in `cors.origins` array or satisfies `cors.originRegEx` RegEx test), then an `Access-Control-Allow-Origin` header will be appended to the response with value equal to the `Origin` header. Note that if `cors.originRegEx` is available as a string, the `RegExp` object will be built with `new RegExp(cors.originRegEx, 'i')`.
 
 When running this module as a command line application, these options should be saved in a JSON configuration file whose path is passed to the application with argument `--config`. When using this module in your own Node.js application, these options should be passed to the `GeoIpWebApi` constructor. See Usage section below.
 
@@ -82,7 +90,10 @@ When running this module as a command line application, these options should be 
 {
   "logLevel": 1,
   "port": 8080,
-  "echoIp": true,
+  "enabledOutputs": {
+    "ip": true,
+    "data": true
+  },
   "getHeaders": {
     "cache-control": "private, max-age=3600",
     "X-Content-Type-Options": "nosniff"
@@ -137,12 +148,15 @@ The response body is `application/json` and contains the following data:
 
 ```JavaScript
 {
-  "country": {string},     // ISO 3166-1 alpha-2 country code
-  "subdivision": {string}, // (Optional: depends on DB support) Subdivision part of ISO 3166-2 country-subdivision code
-  "ip": {string},          // (Optional: when echoIp == true) request IP
-  "ip_version": {number}   // (Optional: when echoIp == true) request IP version (4 or 6)
+  "country": {string},      // ISO 3166-1 alpha-2 country code
+  "subdivision": {string},  // Subdivision part of ISO 3166-2 country-subdivision code
+  "ip": {string},           // Request IP
+  "ip_version": {number}    // Request IP version (4 or 6, or 0 if IP is not valid)
+  "data": {object}          // Complete database result
 }
 ```
+
+The schema for `data` depends on the database used.
 
 Response conforms to [AMP-GEO fallback API schema 0.2](https://github.com/ampproject/amphtml/blob/f744c490be41f2553b24cb9f0f0efb5136477e79/extensions/amp-geo/0.1/amp-geo.js#L286-L307)
 

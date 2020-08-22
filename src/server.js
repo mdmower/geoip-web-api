@@ -2,16 +2,17 @@ const express = require('express');
 const {GwaCors} = require('./cors');
 const {GwaLog} = require('./log');
 const {GwaMaxMind} = require('./maxmind');
-const {getDefaultOptions, overlayOptions} = require('./options');
+const {overlayOptions} = require('./options');
 
 /**
  * GeoIP API response
  * Conforms to AMP-GEO fallback API response JSON schema version 0.2
  * @typedef {Object} GeoIpApiResponse
- * @property {string} country ISO 3166-1 alpha-2 country code
+ * @property {string} [country] ISO 3166-1 alpha-2 country code
  * @property {string} [subdivision] Subdivision part of ISO 3166-2 country-subdivision code
  * @property {string} [ip] Request IP
  * @property {number} [ip_version] Request IP version
+ * @property {Object} [data] Complete database result
  */
 
 /**
@@ -29,7 +30,7 @@ class GwaServer {
    * @param {Object.<string, any> | undefined} options User options that should overlay default options
    */
   constructor(options) {
-    const appOptions = overlayOptions(options, getDefaultOptions());
+    const appOptions = overlayOptions(options);
 
     /**
      * @private
@@ -45,11 +46,9 @@ class GwaServer {
     /**
      * @private
      */
-    this.enabledOutputs_ = {
-      ip: appOptions.echoIp,
-      country: true,
-      subdivision: true,
-    };
+    this.enabledOutputs_ = Object.keys(appOptions.enabledOutputs).filter(
+      (output) => appOptions.enabledOutputs[output]
+    );
 
     /**
      * @private

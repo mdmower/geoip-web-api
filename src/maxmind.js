@@ -10,7 +10,7 @@ class GwaMaxMind {
   /**
    * @param {Object} options MaxMind database and reader options
    * @param {string} options.dbPath Filesystem path to MaxMind database
-   * @param {Object.<string, boolean>} enabledOutputs Values to be included in response
+   * @param {Array<string>} enabledOutputs Values to be included in response
    * @param {GwaLog} log Log instance
    */
   constructor(options, enabledOutputs, log) {
@@ -34,7 +34,7 @@ class GwaMaxMind {
     /**
      * @private
      */
-    this.enabledOutputs_ = Object.keys(enabledOutputs).filter((key) => enabledOutputs[key]);
+    this.enabledOutputs_ = enabledOutputs;
   }
 
   /**
@@ -66,23 +66,32 @@ class GwaMaxMind {
    * @returns {Promise<!import('./server').LookupResponse>} IP lookup result
    */
   async lookup(ip) {
+    const ipVersion = isIP(ip);
+
     /** @type {import('./server').LookupResponse} */
     const ret = {
       error: null,
-      geoIpApiResponse: this.geoIpApiResponse(null, null, null),
+      geoIpApiResponse: this.geoIpApiResponse(null, ip, ipVersion),
     };
+
+    if (!ipVersion) {
+      ret.error = `Invalid IP: ${ip}`;
+      return ret;
+    }
+
+    // User doesn't want any GeoIP features? Ok then.
+    const ipOutputs = ['ip', 'ip_version'];
+    const isDbNeeded =
+      this.enabledOutputs_.filter((option) => !ipOutputs.includes(option)).length > 0;
+    if (!isDbNeeded) {
+      return ret;
+    }
 
     if (!this.dbReader_) {
       await this.loadDbReader(this.dbPath_);
     }
     if (!this.dbReader_) {
       throw new Error('loadDbReader completed without populating dbReader');
-    }
-
-    const ipVersion = isIP(ip);
-    if (!ipVersion) {
-      ret.error = `Invalid IP: ${ip}`;
-      return ret;
     }
 
     let mmResult;
@@ -116,20 +125,28 @@ class GwaMaxMind {
    */
   geoIpApiResponse(mmResult, ip, ipVersion) {
     /** @type {import('./server').GeoIpApiResponse} */
-    const ret = {
-      country: '',
-    };
+    const ret = {};
 
-    this.enabledOutputs_.forEach((key) => {
-      if (key === 'ip') {
-        ret['ip'] = ip || '';
-        ret['ip_version'] = ipVersion || 0;
-      } else if (key === 'country') {
-        ret[key] = this.getCountry(mmResult);
-      } else if (key === 'subdivision') {
-        const subdivision = this.getSubdivision(mmResult);
-        if (subdivision !== null) {
-          ret[key] = subdivision;
+    this.enabledOutputs_.forEach((output) => {
+      switch (output) {
+        case 'ip':
+          ret[output] = ip || '';
+          break;
+        case 'ip_version':
+          ret[output] = ipVersion || 0;
+          break;
+        case 'country':
+        case 'subdivision': {
+          const value = this.getStringValue(mmResult, output);
+          if (value !== null) {
+            ret[output] = value;
+          }
+          break;
+        }
+        case 'data': {
+          if (mmResult) {
+            ret[output] = mmResult;
+          }
         }
       }
     });
@@ -138,34 +155,43 @@ class GwaMaxMind {
   }
 
   /**
-   * Get country from MaxMind result
+   *
    * @param {any} mmResult Result of MaxMind database search
-   * @returns {string} ISO 3166-1 alpha-2 country code
+   * @param {string} output Output value to fetch from database
+   * @returns {?string} Output value
    */
-  getCountry(mmResult) {
-    return mmResult && mmResult.country && typeof mmResult.country.iso_code === 'string'
-      ? mmResult.country.iso_code.trim()
-      : '';
-  }
-
-  /**
-   * Get subdivision from MaxMind result
-   * @param {any} mmResult Result of MaxMind database search
-   * @returns {?string} Subdivision part of ISO 3166-2 country-subdivision code or null if database
-   * does not support subdivision lookup
-   */
-  getSubdivision(mmResult) {
-    // If database does not include subdivision support (e.g. Country database),
-    // then subdivisions property is not included in mmResult
-    if (!mmResult || !Object.keys(mmResult).includes('subdivisions')) {
+  getStringValue(mmResult, output) {
+    if (!mmResult) {
       return null;
     }
 
-    return Array.isArray(mmResult.subdivisions) &&
-      mmResult.subdivisions[0] &&
-      typeof mmResult.subdivisions[0].iso_code === 'string'
-      ? mmResult.subdivisions[0].iso_code.trim()
-      : '';
+    if (output === 'country') {
+      if (!Object.keys(mmResult).includes('country')) {
+        return null;
+      }
+      return (
+        (mmResult.country &&
+          typeof mmResult.country.iso_code === 'string' &&
+          mmResult.country.iso_code.trim()) ||
+        ''
+      );
+    }
+
+    if (output === 'subdivision') {
+      if (!Object.keys(mmResult).includes('subdivisions')) {
+        return null;
+      }
+
+      return (
+        (Array.isArray(mmResult.subdivisions) &&
+          mmResult.subdivisions[0] &&
+          typeof mmResult.subdivisions[0].iso_code === 'string' &&
+          mmResult.subdivisions[0].iso_code.trim()) ||
+        ''
+      );
+    }
+
+    return null;
   }
 }
 
