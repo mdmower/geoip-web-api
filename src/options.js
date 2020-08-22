@@ -11,6 +11,7 @@ const LOG_TAG = 'GwaOptions';
  * @property {number} logLevel Log level (0:Off, 1:Error, 2:Warn, 3:Info, 4:Debug)
  * @property {number} port Port where HTTP server should listen
  * @property {Object.<string, string>} getHeaders Dictionary of HTTP response headers for GET requests
+ * @property {Array<string>} getPaths Array of paths to match for GET requests
  * @property {Object} cors Allowed CORS origin tests
  * @property {?Array<string>} cors.origins Array of allowed CORS origins
  * @property {?(RegExp|string)} cors.originRegEx RegEx test for allowed CORS origins
@@ -31,6 +32,7 @@ function getDefaultOptions() {
     getHeaders: {
       'Cache-Control': 'private, max-age=1800',
     },
+    getPaths: ['/', '/*'],
     cors: {
       origins: null,
       originRegEx: null,
@@ -73,6 +75,20 @@ function overlayOptions(src, target) {
         target.getHeaders[key] = src.getHeaders[key];
       }
     });
+  }
+
+  // Validation of GET routes via path-to-regexp package doesn't look reliable:
+  // https://github.com/pillarjs/path-to-regexp#compatibility-with-express--4x
+  // Express seems to tolerate some very invalid path definitions. There's not
+  // much to do here other than verify strings.
+  if (Array.isArray(src.getPaths)) {
+    target.getPaths = src.getPaths
+      .map((p) => (typeof p === 'string' ? p.trim() : ''))
+      .filter(Boolean);
+    // Ensure at least one path is available
+    if (!target.getPaths.length) {
+      target.getPaths.push('/');
+    }
   }
 
   // CORS properties are null by default, so only modify if good values are found

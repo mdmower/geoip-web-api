@@ -43,6 +43,11 @@ class GwaServer {
     /**
      * @private
      */
+    this.getPaths_ = appOptions.getPaths;
+
+    /**
+     * @private
+     */
     this.server_ = undefined;
 
     /**
@@ -102,7 +107,7 @@ class GwaServer {
 
     return new Promise((resolve) => {
       // Allow any path, proxy should forward only relevant requests
-      this.express_.get(['/', '/*'], this.handleGet.bind(this));
+      this.express_.get(this.getPaths_, this.handleGet.bind(this));
       this.server_ = this.express_.listen(this.port_, () => {
         this.log_.info(`[${LOG_TAG}] Listening at http://localhost:${this.port_}`);
 

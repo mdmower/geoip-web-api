@@ -45,6 +45,9 @@ All properties are optional, provided the defaults are suitable.
     "cache-control": "private, max-age=1800"
   },
 
+  // {Array<string>} Array of GET paths to which HTTP server should respond
+  "getPaths": ['/', '/*'],
+
   // {Object} Allowed CORS origin tests
   "cors": {
     // {Array<string>} Array of allowed CORS origins
@@ -64,6 +67,8 @@ All properties are optional, provided the defaults are suitable.
 
 If `getHeaders` is available, the default set is removed and only the headers in options are appended to responses. Some response headers are generated automatically, like `Content-Type` and `Content-Length`.
 
+If `getPaths` is available, the default set is removed and only the paths in options are used to define routes to which server should respond. See Express [Route paths](https://expressjs.com/en/guide/routing.html#route-paths) documentation for allowed route patterns. Notice that the defaul configuration matches requests to any path.
+
 If `cors.origins` and/or `cors.originRegEx` is available and the incoming request has an `Origin` HTTP header that satisfies one of these tests (is in `cors.origins` array or satisfies `cors.originRegEx` RegEx test), then an `Access-Control-Allow-Origin` header will be appended to the response with value equal to the `Origin` header. Note that if `cors.originRegEx` is available as a string, the `RegExp` object will be built with `new RegExp(cors.originRegEx, 'i')`.
 
 When running this module as a command line application, these options should be saved in a JSON configuration file whose path is passed to the application with argument `--config`. When using this module in your own Node.js application, these options should be passed to the `GeoIpWebApi` constructor. See Usage section below.
@@ -78,6 +83,7 @@ When running this module as a command line application, these options should be 
     "cache-control": "private, max-age=3600",
     "X-Content-Type-Options": "nosniff"
   },
+  "getPaths": ["/geoip/?"],
   "cors": {
     "origins": ["http://example.com", "http://example.net"],
     "originRegEx": "^https://[a-z0-9\\-]+\\.example\\.(com|net)$"
@@ -160,10 +166,7 @@ JSON response body conforms to [AMP-GEO fallback API schema 0.2](https://github.
 
 ## Reverse proxy
 
-The HTTP server ([Express](https://expressjs.com/)) in this module is designed to run behind a reverse proxy. It has been configured to:
-
-- trust the leftmost IP in the `X-Forwarded-For` request header (see [documentation](https://expressjs.com/en/guide/behind-proxies.html) for `trust proxy = true`)
-- respond to requests for any path
+The HTTP server ([Express](https://expressjs.com/)) in this module is designed to run behind a reverse proxy. It has been configured to trust the leftmost IP in the `X-Forwarded-For` request header (see [documentation](https://expressjs.com/en/guide/behind-proxies.html) for `trust proxy = true`).
 
 ### Sample Nginx location block
 
