@@ -4,6 +4,23 @@ const {GwaLog} = require('./log');
 const {GwaMaxMind} = require('./maxmind');
 const {getDefaultOptions, overlayOptions} = require('./options');
 
+/**
+ * GeoIP API response
+ * Conforms to AMP-GEO fallback API response JSON schema version 0.2
+ * @typedef {Object} GeoIpApiResponse
+ * @property {string} country ISO 3166-1 alpha-2 country code
+ * @property {string} [subdivision] Subdivision part of ISO 3166-2 country-subdivision code
+ * @property {string} [ip] Request IP
+ * @property {number} [ip_version] Request IP version
+ */
+
+/**
+ * Location lookup response
+ * @typedef {Object} LookupResponse
+ * @property {?string} error Error (if any) encountered during IP lookup
+ * @property {?GeoIpApiResponse} geoIpApiResponse GeoIP API response
+ */
+
 /** @constant */
 const LOG_TAG = 'GwaServer';
 
@@ -23,12 +40,21 @@ class GwaServer {
     /**
      * @private
      */
-    this.cors_ = new GwaCors(appOptions.cors || {}, this.log_);
+    this.cors_ = new GwaCors(appOptions.cors, this.log_);
 
     /**
      * @private
      */
-    this.maxmind_ = new GwaMaxMind(appOptions.maxmind || {}, this.log_);
+    this.enabledOutputs_ = {
+      ip: appOptions.echoIp,
+      country: true,
+      subdivision: true,
+    };
+
+    /**
+     * @private
+     */
+    this.maxmind_ = new GwaMaxMind(appOptions.maxmind, this.enabledOutputs_, this.log_);
 
     /**
      * @private
@@ -68,12 +94,12 @@ class GwaServer {
    */
   async handleGet(req, res) {
     this.log_.debug(`[${LOG_TAG}] Looking up IP: ${req.ip}`);
-    let geoApiResponse;
+    let geoIpApiResponse;
 
     try {
       const ipLookup = await this.maxmind_.lookup(req.ip);
       if (!ipLookup.error) {
-        geoApiResponse = ipLookup.geoApiResponse;
+        geoIpApiResponse = ipLookup.geoIpApiResponse;
       } else {
         this.log_.error(`[${LOG_TAG}] Failed to lookup IP\n`, ipLookup.error);
       }
@@ -82,8 +108,8 @@ class GwaServer {
     }
 
     // Make sure a response body is available
-    if (!geoApiResponse) {
-      geoApiResponse = this.maxmind_.geoApiResponse(null, null);
+    if (!geoIpApiResponse) {
+      geoIpApiResponse = this.maxmind_.geoIpApiResponse(null, null, null);
     }
 
     // Set optional GET headers
@@ -92,7 +118,7 @@ class GwaServer {
     // Set CORS headers
     res.set(this.cors_.getCorsHeaders(req.get('origin') || ''));
 
-    res.json(geoApiResponse);
+    res.json(geoIpApiResponse);
   }
 
   /**

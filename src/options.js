@@ -10,6 +10,7 @@ const LOG_TAG = 'GwaOptions';
  * @typedef AppOptions
  * @property {number} logLevel Log level (0:Off, 1:Error, 2:Warn, 3:Info, 4:Debug)
  * @property {number} port Port where HTTP server should listen
+ * @property {boolean} echoIp Whether request IP should be included in response
  * @property {Object.<string, string>} getHeaders Dictionary of HTTP response headers for GET requests
  * @property {Array<string>} getPaths Array of paths to match for GET requests
  * @property {Object} cors Allowed CORS origin tests
@@ -29,6 +30,7 @@ function getDefaultOptions() {
   return {
     logLevel: LogLevel.INFO,
     port: 3000,
+    echoIp: false,
     getHeaders: {
       'Cache-Control': 'private, max-age=1800',
     },
@@ -63,6 +65,11 @@ function overlayOptions(src, target) {
   // Only set HTTP server port if a valid value is available
   if (src.port > 0) {
     target.port = Math.floor(src.port);
+  }
+
+  // Echo IP in response
+  if (typeof src.echoIp === 'boolean') {
+    target.echoIp = src.echoIp;
   }
 
   // If getHeaders is specified, clear default headers

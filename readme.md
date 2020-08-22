@@ -1,6 +1,6 @@
 # geoip-web-api
 
-A web API for use as an [amp-geo fallback](https://github.com/ampproject/amphtml/blob/master/spec/amp-framework-hosting.md#amp-geo-fallback-api) when self-hosting the AMP framework. Also suitable for general IP-based geolocation at the [country](https://en.wikipedia.org/wiki/ISO_3166-1) level with optional [subdivision](https://en.wikipedia.org/wiki/ISO_3166-2) support. Both IPv4 and IPv6 are supported.
+A web API for IP-based geolocation at the [country](https://en.wikipedia.org/wiki/ISO_3166-1) level with optional [subdivision](https://en.wikipedia.org/wiki/ISO_3166-2) support. Both IPv4 and IPv6 are supported. Suitable for use as an [amp-geo fallback](https://github.com/ampproject/amphtml/blob/master/spec/amp-framework-hosting.md#amp-geo-fallback-api) when self-hosting the AMP framework.
 
 ## GeoIP database and reader
 
@@ -39,6 +39,9 @@ All properties are optional, provided the defaults are suitable.
 
   // {number} Port where HTTP server should listen
   "port": 3000,
+
+  // {boolean} Whether request IP should be included in response
+  "echoIp": false,
 
   // {Object.<string, string>} Dictionary of HTTP response headers for GET requests
   "getHeaders": {
@@ -79,6 +82,7 @@ When running this module as a command line application, these options should be 
 {
   "logLevel": 1,
   "port": 8080,
+  "echoIp": true,
   "getHeaders": {
     "cache-control": "private, max-age=3600",
     "X-Content-Type-Options": "nosniff"
@@ -129,7 +133,18 @@ let isRunning = geoIpWebApi.isRunning();
 
 ## HTTP response
 
-JSON response body conforms to [AMP-GEO fallback API schema 0.2](https://github.com/ampproject/amphtml/blob/f744c490be41f2553b24cb9f0f0efb5136477e79/extensions/amp-geo/0.1/amp-geo.js#L286-L307)
+The response body is `application/json` and contains the following data:
+
+```JavaScript
+{
+  "country": {string},     // ISO 3166-1 alpha-2 country code
+  "subdivision": {string}, // (Optional: depends on DB support) Subdivision part of ISO 3166-2 country-subdivision code
+  "ip": {string},          // (Optional: when echoIp == true) request IP
+  "ip_version": {number}   // (Optional: when echoIp == true) request IP version (4 or 6)
+}
+```
+
+Response conforms to [AMP-GEO fallback API schema 0.2](https://github.com/ampproject/amphtml/blob/f744c490be41f2553b24cb9f0f0efb5136477e79/extensions/amp-geo/0.1/amp-geo.js#L286-L307)
 
 ```JSON
 {
