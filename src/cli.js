@@ -15,7 +15,7 @@ const argv = minimist(process.argv.slice(2));
 if (argv.config) {
   const configPath = argv.config.replace(/^['"\s]|['"\s]$/g, '');
   try {
-    options = getJsonOptions(configPath);
+    options = getJsonOptions(expandTildePath(configPath));
   } catch (ex) {
     console.error(`[${LOG_TAG}] Failed to read custom config at ${configPath}`);
     process.exit(1);
