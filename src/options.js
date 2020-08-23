@@ -11,7 +11,7 @@ const LOG_TAG = 'GwaOptions';
  * @property {number} logLevel Log level (0:Off, 1:Error, 2:Warn, 3:Info, 4:Debug)
  * @property {number} port Port where HTTP server should listen
  * @property {Object.<string, boolean>} enabledOutputs Individual outputs that should be included in the response
- * @property {Object.<string, string>} getHeaders Dictionary of HTTP response headers for GET requests
+ * @property {Object.<string, ?string>} getHeaders Dictionary of HTTP response headers for GET requests
  * @property {Array<string>} getPaths Array of paths to match for GET requests
  * @property {Object} cors Allowed CORS origin tests
  * @property {?Array<string>} cors.origins Array of allowed CORS origins
@@ -83,13 +83,23 @@ function overlayOptions(src) {
       });
   }
 
-  // If getHeaders is specified, clear default headers
+  // GET headers
   if (src.getHeaders instanceof Object) {
     target.getHeaders = {};
 
-    // Only allow string header keys/values
+    // Only allow string header keys and string or null values
+    // which indicate that a header should be removed (if possible).
+    // Retain only the last definition of a header if multiple
+    // exist with distinct cases, all the while retaining the
+    // user's original casing of the header name.
     Object.keys(src.getHeaders).forEach((key) => {
-      if (typeof src.getHeaders[key] === 'string') {
+      if (typeof src.getHeaders[key] === 'string' || src.getHeaders[key] === null) {
+        const duplicateKey = Object.keys(target.getHeaders).find(
+          (h) => h.toLowerCase() === key.toLowerCase()
+        );
+        if (duplicateKey) {
+          delete target.getHeaders[duplicateKey];
+        }
         target.getHeaders[key] = src.getHeaders[key];
       }
     });

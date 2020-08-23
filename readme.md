@@ -49,7 +49,7 @@ All properties are optional, provided the defaults are suitable.
     "data": false
   },
 
-  // {Object.<string, string>} Dictionary of HTTP response headers for GET requests
+  // {Object.<string, ?string>} Dictionary of HTTP response headers for GET requests
   "getHeaders": {},
 
   // {Array<string>} Array of GET paths to which HTTP server should respond
@@ -76,7 +76,7 @@ All properties are optional, provided the defaults are suitable.
 
 - `enabledOutputs` - If an output is enabled but is not supported by the database, it will not be output in the final response.
 
-- `getHeaders` - Some response headers like `Content-Type` and `Content-Length` are generated automatically. Some headers like `Server` can be removed by setting their values to `null`.
+- `getHeaders` - Headers can be removed from the response by setting their values to `null`. The `Content-Type` and `Content-Length` headers are generated automatically and cannot be removed; it is possible to change the `Content-Type` header to another valid MIME type, but it is not possible to alter `Content-Length`. The `ETag` header additionally supports special values `"strong"` and `"weak"` to specify strong or weak ETag generation, respectively (weak by default).
 
 - `getPaths` - See Express [Route paths](https://expressjs.com/en/guide/routing.html#route-paths) documentation for allowed route patterns. Notice that the default configuration matches requests to any path.
 

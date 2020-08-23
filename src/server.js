@@ -79,10 +79,56 @@ class GwaServer {
      * @private
      */
     this.express_ = express();
+    this.beforeListen();
+  }
 
+  /**
+   * Apply custom Epxress settings and middleware before starting listeners
+   * @private
+   */
+  beforeListen() {
     // Trust leftmost IP in X-Forwarded-For request header
     // https://expressjs.com/en/guide/behind-proxies.html
     this.express_.set('trust proxy', true);
+
+    let getHeadersKeys = Object.keys(this.getHeaders_);
+
+    const xPoweredBy = getHeadersKeys.find((h) => /^x-powered-by$/i.test(h));
+    if (xPoweredBy) {
+      if (this.getHeaders_[xPoweredBy] === null) {
+        this.express_.disable('x-powered-by');
+        delete this.getHeaders_[xPoweredBy];
+      }
+    }
+
+    const etag = getHeadersKeys.find((h) => /^etag$/i.test(h));
+    if (etag) {
+      const etagValue = this.getHeaders_[etag];
+      if (etagValue === null) {
+        this.express_.disable('etag');
+      } else if (/^strong|weak$/i.test(etagValue)) {
+        this.express_.set(etag, etagValue.toLowerCase());
+      }
+      delete this.getHeaders_[etag];
+    }
+
+    // Do not add middleware if not necessary
+    if (!Object.keys(this.getHeaders_).length) {
+      return;
+    }
+
+    const removeHeaders = Object.keys(this.getHeaders_).filter((h) => this.getHeaders_[h] === null);
+    removeHeaders.forEach((h) => {
+      delete this.getHeaders_[h];
+    });
+
+    this.express_.use((req, res, next) => {
+      removeHeaders.forEach((h) => {
+        res.removeHeader(h);
+      });
+      res.set(this.getHeaders_);
+      next();
+    });
   }
 
   /**
@@ -111,11 +157,11 @@ class GwaServer {
       geoIpApiResponse = this.maxmind_.geoIpApiResponse(null, null, null);
     }
 
-    // Set optional GET headers
-    res.set(this.getHeaders_);
-
     // Set CORS headers
-    res.set(this.cors_.getCorsHeaders(req.get('origin') || ''));
+    const corsHeaders = this.cors_.getCorsHeaders(req.get('origin'));
+    if (corsHeaders) {
+      res.set(corsHeaders);
+    }
 
     res.json(geoIpApiResponse);
   }

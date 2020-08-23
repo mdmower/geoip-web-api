@@ -104,17 +104,15 @@ class GwaCors {
 
   /**
    * Get CORS headers (if appropriate) for origin
-   * @param {string} origin Origin header value from HTTP request
-   * @returns {Object.<string, string>}
+   * @param {string|undefined} origin Origin header value from HTTP request
+   * @returns {?Object.<string, string>}
    */
   getCorsHeaders(origin) {
-    if (this.isCorsOrigin(origin)) {
-      return {
-        'Access-Control-Allow-Origin': origin,
-      };
-    }
-
-    return {};
+    return origin && this.isCorsOrigin(origin)
+      ? {
+          'Access-Control-Allow-Origin': origin,
+        }
+      : null;
   }
 }
 
