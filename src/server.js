@@ -1,13 +1,12 @@
 const express = require('express');
 const {GwaCors} = require('./cors');
 const {GwaLog} = require('./log');
-const {GwaMaxMind} = require('./maxmind');
-const {overlayOptions} = require('./options');
+const {GwaDb} = require('./db');
+const {overlayOptions, getDbOptions} = require('./options');
 
 /**
- * GeoIP API response
- * Conforms to AMP-GEO fallback API response JSON schema version 0.2
- * @typedef {Object} GeoIpApiResponse
+ * GeoIP API response; conforms to AMP-GEO fallback API response JSON schema version 0.2
+ * @typedef GeoIpApiResponse
  * @property {string} [country] ISO 3166-1 alpha-2 country code
  * @property {string} [subdivision] Subdivision part of ISO 3166-2 country-subdivision code
  * @property {string} [ip] Request IP
@@ -17,7 +16,7 @@ const {overlayOptions} = require('./options');
 
 /**
  * Location lookup response
- * @typedef {Object} LookupResponse
+ * @typedef LookupResponse
  * @property {?string} error Error (if any) encountered during IP lookup
  * @property {?GeoIpApiResponse} geoIpApiResponse GeoIP API response
  */
@@ -58,7 +57,7 @@ class GwaServer {
     /**
      * @private
      */
-    this.maxmind_ = new GwaMaxMind(appOptions.maxmind, this.enabledOutputs_, this.log_);
+    this.db_ = new GwaDb(getDbOptions(appOptions), this.enabledOutputs_, this.log_);
 
     /**
      * @private
@@ -151,7 +150,7 @@ class GwaServer {
     let geoIpApiResponse;
 
     try {
-      const ipLookup = await this.maxmind_.lookup(req.ip);
+      const ipLookup = await this.db_.lookup(req.ip);
       if (!ipLookup.error) {
         geoIpApiResponse = ipLookup.geoIpApiResponse;
       } else {
@@ -163,7 +162,7 @@ class GwaServer {
 
     // Make sure a response body is available
     if (!geoIpApiResponse) {
-      geoIpApiResponse = this.maxmind_.geoIpApiResponse(null, null, null);
+      geoIpApiResponse = this.db_.geoIpApiResponse(null, null, null);
     }
 
     // Set CORS headers

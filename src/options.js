@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const {LogLevel} = require('./log');
 const {expandTildePath} = require('./utils');
+const {DbProvider} = require('./db');
 
 /** @constant */
 const LOG_TAG = 'GwaOptions';
@@ -169,4 +170,21 @@ function getJsonOptions(path) {
   return JSON.parse(customConfigText);
 }
 
-module.exports = {getDefaultOptions, overlayOptions, getJsonOptions};
+/**
+ * Get options for GwaDb constructor
+ * @param {AppOptions} appOptions Applications options
+ * @returns {import('./db').GwaDbOptions} Database options
+ */
+function getDbOptions(appOptions) {
+  const gwaDbOptions = {};
+  if (appOptions.maxmind && appOptions.maxmind.dbPath) {
+    gwaDbOptions.dbProvider = DbProvider.MAXMIND;
+    gwaDbOptions.maxMindOptions = appOptions.maxmind;
+  } else {
+    gwaDbOptions.dbProvider = DbProvider.UNKNOWN;
+  }
+
+  return gwaDbOptions;
+}
+
+module.exports = {getDefaultOptions, overlayOptions, getJsonOptions, getDbOptions};
