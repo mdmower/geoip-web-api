@@ -5,6 +5,7 @@
     "ip": true,
     "data": true
   },
+  "prettyOutput": true,
   "getHeaders": {
     "cache-control": "private, max-age=3600",
     "X-Content-Type-Options": "nosniff"

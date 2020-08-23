@@ -49,6 +49,9 @@ All properties are optional, provided the defaults are suitable.
     "data": false
   },
 
+  // {boolean} Pretty JSON output
+  "prettyOutput": false,
+
   // {Object.<string, ?string>} Dictionary of HTTP response headers for GET requests
   "getHeaders": {},
 

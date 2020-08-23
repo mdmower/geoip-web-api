@@ -11,6 +11,7 @@ const LOG_TAG = 'GwaOptions';
  * @property {number} logLevel Log level (0:Off, 1:Error, 2:Warn, 3:Info, 4:Debug)
  * @property {number} port Port where HTTP server should listen
  * @property {Object.<string, boolean>} enabledOutputs Individual outputs that should be included in the response
+ * @property {boolean} prettyOutput Pretty JSON output
  * @property {Object.<string, ?string>} getHeaders Dictionary of HTTP response headers for GET requests
  * @property {Array<string>} getPaths Array of paths to match for GET requests
  * @property {Object} cors Allowed CORS origin tests
@@ -37,6 +38,7 @@ function getDefaultOptions() {
       ip_version: false,
       data: false,
     },
+    prettyOutput: false,
     getHeaders: {},
     getPaths: ['/', '/*'],
     cors: {
@@ -81,6 +83,11 @@ function overlayOptions(src) {
           target.enabledOutputs[output] = src.enabledOutputs[output];
         }
       });
+  }
+
+  // Pretty JSON output
+  if (typeof src.prettyOutput === 'boolean') {
+    target.prettyOutput = src.prettyOutput;
   }
 
   // GET headers

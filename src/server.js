@@ -53,6 +53,11 @@ class GwaServer {
     /**
      * @private
      */
+    this.prettyOutput_ = appOptions.prettyOutput;
+
+    /**
+     * @private
+     */
     this.maxmind_ = new GwaMaxMind(appOptions.maxmind, this.enabledOutputs_, this.log_);
 
     /**
@@ -90,6 +95,10 @@ class GwaServer {
     // Trust leftmost IP in X-Forwarded-For request header
     // https://expressjs.com/en/guide/behind-proxies.html
     this.express_.set('trust proxy', true);
+
+    if (this.prettyOutput_) {
+      this.express_.set('json spaces', 2);
+    }
 
     let getHeadersKeys = Object.keys(this.getHeaders_);
 
