@@ -180,12 +180,12 @@ class GwaServer {
    * @returns {Promise<void>} Resolves when server listeners have started
    */
   async start() {
-    if (this.server_) {
-      this.log_.debug(`[${LOG_TAG}] Server appears to be running already`);
-      return;
-    }
-
     return new Promise((resolve) => {
+      if (this.server_) {
+        this.log_.debug(`[${LOG_TAG}] Server appears to be running already`);
+        return resolve();
+      }
+
       // Allow any path, proxy should forward only relevant requests
       this.express_.get(this.getPaths_, this.handleGet.bind(this));
       this.server_ = this.express_.listen(this.port_, () => {
@@ -201,14 +201,13 @@ class GwaServer {
    * @returns {Promise<void>} Resolves when server listeners have stopped
    */
   async stop() {
-    if (!this.server_) {
-      this.log_.debug(`[${LOG_TAG}] Server does not appear to be running`);
-      return;
-    }
-
-    const thisServer_ = this.server_;
     return new Promise((resolve) => {
-      thisServer_.close(() => {
+      if (!this.server_) {
+        this.log_.debug(`[${LOG_TAG}] Server does not appear to be running`);
+        return resolve();
+      }
+
+      this.server_.close(() => {
         this.log_.info(`[${LOG_TAG}] Stopped listening at http://localhost:${this.port_}`);
 
         this.server_ = undefined;
