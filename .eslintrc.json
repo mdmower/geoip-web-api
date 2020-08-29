@@ -1,13 +1,10 @@
 {
   "env": {
-    "browser": true,
-    "commonjs": true,
     "es2020": true,
     "node": true
   },
   "extends": ["prettier", "plugin:jsdoc/recommended"],
   "parserOptions": {
-    "ecmaVersion": 11,
     "sourceType": "module"
   },
   "plugins": ["jsdoc", "prettier"],
@@ -29,5 +26,6 @@
     "jsdoc": {
       "mode": "typescript"
     }
-  }
+  },
+  "root": true
 }

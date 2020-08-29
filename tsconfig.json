@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "lib": ["ES2018"],
+    "lib": ["ESNext"],
     "module": "commonjs",
     "moduleResolution": "node",
     "target": "ES2015",
@@ -8,7 +8,8 @@
     "checkJs": true,
     "strict": true,
     "esModuleInterop": true,
-    "outDir": "lib"
+    "outDir": "lib",
+    "sourceMap": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "**/*.spec.js"]
