@@ -1,4 +1,5 @@
 const {GwaMaxMind} = require('./db-interface/maxmind');
+const {GwaIP2Location} = require('./db-interface/ip2location');
 const {GwaLog} = require('./log');
 const {isIP} = require('net');
 
@@ -10,12 +11,14 @@ const LOG_TAG = 'GwaDb';
  * @typedef GwaDbOptions
  * @property {DbProvider} dbProvider Database provider
  * @property {import('./db-interface/maxmind').MaxMindOptions} [maxMindOptions] MaxMind database and reader options
+ * @property {import('./db-interface/ip2location').IP2LocationOptions} [ip2LocationOptions] IP2Location database and reader options
  */
 
 /** @enum {number} */
 const DbProvider = {
   UNKNOWN: 0,
   MAXMIND: 1,
+  IP2LOCATION: 2,
 };
 
 class GwaDb {
@@ -49,12 +52,14 @@ class GwaDb {
   /**
    * Identify and construct relevant DB interface
    * @param {GwaDbOptions} gwaDbOptions Database and reader options
-   * @returns {GwaMaxMind}
+   * @returns {GwaMaxMind|GwaIP2Location}
    * @private
    */
   getDbInterface(gwaDbOptions) {
     if (gwaDbOptions.dbProvider === DbProvider.MAXMIND) {
       return new GwaMaxMind(gwaDbOptions.maxMindOptions, this.log_);
+    } else if (gwaDbOptions.dbProvider === DbProvider.IP2LOCATION) {
+      return new GwaIP2Location(gwaDbOptions.ip2LocationOptions, this.log_);
     }
 
     throw new Error(`[${LOG_TAG}] Could not identify a database to load`);

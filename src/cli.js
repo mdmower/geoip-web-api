@@ -25,9 +25,10 @@ if (argv.config) {
 // Verify database available and exit early if not
 const dbPath =
   (options &&
-    options.maxmind &&
-    options.maxmind.dbPath &&
-    expandTildePath(options.maxmind.dbPath)) ||
+    ((options.maxmind && options.maxmind.dbPath && expandTildePath(options.maxmind.dbPath)) ||
+      (options.ip2location &&
+        options.ip2location.dbPath &&
+        expandTildePath(options.ip2location.dbPath)))) ||
   getDefaultOptions().maxmind.dbPath;
 try {
   assertPath(dbPath);

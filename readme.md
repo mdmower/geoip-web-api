@@ -4,13 +4,23 @@ A web API for IP-based geolocation. Both IPv4 and IPv6 are supported. Suitable f
 
 ## GeoIP database and reader
 
-You will need to separately setup MaxMind's [GeoIP Update](https://dev.maxmind.com/geoip/geoipupdate/) program to fetch and maintain a GeoIP database. Select a [free](https://dev.maxmind.com/geoip/geoip2/geolite2/) or [paid](https://dev.maxmind.com/geoip/geoip2/downloadable/) Country or City database in MaxMind DB file format. A sample cron job to let `geoipupdate` check for database updates each day at midnight looks like:
+### Option 1: MaxMind
+
+Setup MaxMind's [GeoIP Update](https://dev.maxmind.com/geoip/geoipupdate/) program to fetch and maintain a GeoIP database. Select a [free](https://dev.maxmind.com/geoip/geoip2/geolite2/) or [paid](https://dev.maxmind.com/geoip/geoip2/downloadable/) database in MaxMind DB file format. A sample cron job to let `geoipupdate` check for database updates each day at midnight looks like:
 
 ```
 0 0 * * * geoipupdate -f /path/to/GeoIP.conf
 ```
 
 This module uses [node-maxmind](https://github.com/runk/node-maxmind) for the database reader. When the database is updated on the filesystem, the reader should automatically reload without needing to restart this module.
+
+### Option 2: IP2Location
+
+Setup IP2Location's [Download Client](https://www.ip2location.com/free/downloader) script to fetch and maintain a GeoIP database. Select a [free](https://lite.ip2location.com/database) or [paid](https://www.ip2location.com/database) database in BIN file format.
+
+Optionally, if you need subdivision support, also download the [ISO 3166-2 Subdivision Code](https://www.ip2location.com/free/iso3166-2) database in CSV file format.
+
+This module uses [ip2ldb-reader](https://github.com/mdmower/ip2ldb-reader) for the database reader. When the database is updated on the filesystem, the reader should automatically reload without needing to restart this module.
 
 ## Installation
 
@@ -69,8 +79,17 @@ All properties are optional, provided the defaults are suitable.
 
   // {Object.<string, string>} MaxMind database and reader options
   "maxmind": {
-    // {string} Filesystem path to MaxMind country or city database
+    // {string} Filesystem path to MaxMind database (in MMDB format)
     "dbPath": path.join(process.cwd(), 'GeoLite2-Country.mmdb')
+  },
+
+  // {Object.<string, string>} IP2Location database and reader options
+  "ip2location": {
+    // {string} Filesystem path to IP2Location database (in BIN format)
+    "dbPath": "",
+
+    // {string} Filesystem path to IP2Location ISO 3166-2 Subdivision Code database (in CSV format)
+    "subdivisionCsvPath": ""
   }
 }
 ```
@@ -84,6 +103,8 @@ All properties are optional, provided the defaults are suitable.
 - `getPaths` - See Express [Route paths](https://expressjs.com/en/guide/routing.html#route-paths) documentation for allowed route patterns. Notice that the default configuration matches requests to any path.
 
 - `cors.origins` and `cors.originRegEx` - If the incoming request has an `Origin` HTTP header that satisfies one of these tests (is in `cors.origins` array or satisfies `cors.originRegEx` RegEx test), then an `Access-Control-Allow-Origin` header will be appended to the response with value equal to the `Origin` header. Note that if `cors.originRegEx` is available as a string, the `RegExp` object will be built with `new RegExp(cors.originRegEx, 'i')`.
+
+- `maxmind` and `ip2location` - Only one of these properties should be provided. If both have valid `dbPath` properties, then MaxMind takes precedence.
 
 When running this module as a command line application, these options should be saved in a JSON configuration file whose path is passed to the application with argument `--config`. When using this module in your own Node.js application, these options should be passed to the `GeoIpWebApi` constructor. See Usage section below.
 

@@ -19,7 +19,10 @@ const LOG_TAG = 'GwaOptions';
  * @property {?Array<string>} cors.origins Array of allowed CORS origins
  * @property {?(RegExp|string)} cors.originRegEx RegEx test for allowed CORS origins
  * @property {Object} maxmind MaxMind database and reader options
- * @property {string} maxmind.dbPath Filesystem path to MaxMind country or city database
+ * @property {string} maxmind.dbPath Filesystem path to MaxMind database
+ * @property {Object} ip2location IP2Location database and reader options
+ * @property {string} ip2location.dbPath Filesystem path to IP2Location database
+ * @property {string} ip2location.subdivisionCsvPath Filesystem path to IP2Location subdivision CSV database
  */
 
 /**
@@ -48,6 +51,10 @@ function getDefaultOptions() {
     },
     maxmind: {
       dbPath: path.join(process.cwd(), 'GeoLite2-Country.mmdb'),
+    },
+    ip2location: {
+      dbPath: '',
+      subdivisionCsvPath: '',
     },
   };
 }
@@ -147,9 +154,30 @@ function overlayOptions(src) {
   }
 
   // MaxMind properties
+  let maxMindDefined = false;
   if (src.maxmind instanceof Object) {
     if (src.maxmind.dbPath && typeof src.maxmind.dbPath === 'string') {
       target.maxmind.dbPath = expandTildePath(src.maxmind.dbPath);
+      maxMindDefined = true;
+    }
+  }
+
+  // IP2Location properties
+  if (!maxMindDefined) {
+    if (src.ip2location instanceof Object) {
+      if (src.ip2location.dbPath && typeof src.ip2location.dbPath === 'string') {
+        target.ip2location.dbPath = expandTildePath(src.ip2location.dbPath);
+        target.maxmind.dbPath = '';
+        // Subdivision support requires a separate CSV database
+        if (
+          src.ip2location.subdivisionCsvPath &&
+          typeof src.ip2location.subdivisionCsvPath === 'string'
+        ) {
+          target.ip2location.subdivisionCsvPath = expandTildePath(
+            src.ip2location.subdivisionCsvPath
+          );
+        }
+      }
     }
   }
 
@@ -176,12 +204,17 @@ function getJsonOptions(path) {
  * @returns {import('./db').GwaDbOptions} Database options
  */
 function getDbOptions(appOptions) {
-  const gwaDbOptions = {};
+  /** @type {import('./db').GwaDbOptions} */
+  const gwaDbOptions = {
+    dbProvider: DbProvider.UNKNOWN,
+  };
+
   if (appOptions.maxmind && appOptions.maxmind.dbPath) {
     gwaDbOptions.dbProvider = DbProvider.MAXMIND;
     gwaDbOptions.maxMindOptions = appOptions.maxmind;
-  } else {
-    gwaDbOptions.dbProvider = DbProvider.UNKNOWN;
+  } else if (appOptions.ip2location && appOptions.ip2location.dbPath) {
+    gwaDbOptions.dbProvider = DbProvider.IP2LOCATION;
+    gwaDbOptions.ip2LocationOptions = appOptions.ip2location;
   }
 
   return gwaDbOptions;
