@@ -1,8 +1,8 @@
-const express = require('express');
-const {GwaCors} = require('./cors');
-const {GwaLog} = require('./log');
-const {GwaDb} = require('./db');
-const {overlayOptions, getDbOptions} = require('./options');
+import express from 'express';
+import {GwaCors} from './cors';
+import {GwaLog} from './log';
+import {GwaDb} from './db';
+import {overlayOptions, getDbOptions} from './options';
 
 /**
  * GeoIP API response; conforms to AMP-GEO fallback API response JSON schema version 0.2
@@ -24,7 +24,7 @@ const {overlayOptions, getDbOptions} = require('./options');
 /** @constant */
 const LOG_TAG = 'GwaServer';
 
-class GwaServer {
+export default class GwaServer {
   /**
    * @param {Object.<string, any> | undefined} options User options that should overlay default options
    */
@@ -225,4 +225,4 @@ class GwaServer {
   }
 }
 
-module.exports = {GwaServer};
+export {GwaServer};

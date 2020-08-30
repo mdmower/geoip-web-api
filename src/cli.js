@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-const minimist = require('minimist');
-const readline = require('readline');
-const {GwaServer} = require('./server');
-const {assertPath, expandTildePath} = require('./utils');
-const {getDefaultOptions, getJsonOptions} = require('./options');
+import minimist from 'minimist';
+import {createInterface} from 'readline';
+import {GwaServer} from './server';
+import {assertPath, expandTildePath} from './utils';
+import {getDefaultOptions, getJsonOptions} from './options';
 
 /** @constant */
 const LOG_TAG = 'GwaCli';
@@ -42,7 +42,7 @@ process.on('SIGINT', () => {
 });
 
 if (process.platform === 'win32') {
-  const rl = readline.createInterface({
+  const rl = createInterface({
     input: process.stdin,
     output: process.stdout,
   });

@@ -1,10 +1,10 @@
-const {GwaLog} = require('./log');
-const {URL} = require('url');
+import {GwaLog} from './log';
+import {URL} from 'url';
 
 /** @constant */
 const LOG_TAG = 'GwaCors';
 
-class GwaCors {
+export default class GwaCors {
   /**
    * @param {Object} options Cross-origin requests options
    * @param {?Array<string>} options.origins Origins array for allowed cross-origin requests
@@ -116,4 +116,4 @@ class GwaCors {
   }
 }
 
-module.exports = {GwaCors};
+export {GwaCors};

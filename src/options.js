@@ -1,15 +1,15 @@
-const fs = require('fs');
-const path = require('path');
-const {LogLevel} = require('./log');
-const {expandTildePath} = require('./utils');
-const {DbProvider} = require('./db');
+import {readFileSync} from 'fs';
+import {join} from 'path';
+import {LogLevel} from './log';
+import {expandTildePath} from './utils';
+import {DbProvider} from './db';
 
 /** @constant */
 const LOG_TAG = 'GwaOptions';
 
 /**
  * @typedef AppOptions
- * @property {number} logLevel Log level (0:Off, 1:Error, 2:Warn, 3:Info, 4:Debug)
+ * @property {LogLevel} logLevel Log level (0:Off, 1:Error, 2:Warn, 3:Info, 4:Debug)
  * @property {number} port Port where HTTP server should listen
  * @property {Object.<string, boolean>} enabledOutputs Individual outputs that should be included in the response
  * @property {boolean} prettyOutput Pretty JSON output
@@ -50,7 +50,7 @@ function getDefaultOptions() {
       originRegEx: null,
     },
     maxmind: {
-      dbPath: path.join(process.cwd(), 'GeoLite2-Country.mmdb'),
+      dbPath: join(process.cwd(), 'GeoLite2-Country.mmdb'),
     },
     ip2location: {
       dbPath: '',
@@ -194,7 +194,7 @@ function getJsonOptions(path) {
     return {};
   }
 
-  const customConfigText = fs.readFileSync(path, {encoding: 'utf8'});
+  const customConfigText = readFileSync(path, {encoding: 'utf8'});
   return JSON.parse(customConfigText);
 }
 
@@ -220,4 +220,5 @@ function getDbOptions(appOptions) {
   return gwaDbOptions;
 }
 
-module.exports = {getDefaultOptions, overlayOptions, getJsonOptions, getDbOptions};
+export {getDefaultOptions, overlayOptions, getJsonOptions, getDbOptions};
+export default {getDefaultOptions, overlayOptions, getJsonOptions, getDbOptions};

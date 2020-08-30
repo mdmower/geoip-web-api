@@ -1,7 +1,7 @@
-const {GwaMaxMind} = require('./db-interface/maxmind');
-const {GwaIP2Location} = require('./db-interface/ip2location');
-const {GwaLog} = require('./log');
-const {isIP} = require('net');
+import {GwaMaxMind} from './db-interface/maxmind';
+import {GwaIP2Location} from './db-interface/ip2location';
+import {GwaLog} from './log';
+import {isIP} from 'net';
 
 /** @constant */
 const LOG_TAG = 'GwaDb';
@@ -15,13 +15,13 @@ const LOG_TAG = 'GwaDb';
  */
 
 /** @enum {number} */
-const DbProvider = {
+export const DbProvider = {
   UNKNOWN: 0,
   MAXMIND: 1,
   IP2LOCATION: 2,
 };
 
-class GwaDb {
+export default class GwaDb {
   /**
    * @param {GwaDbOptions} dbOptions Database and reader options
    * @param {Array<string>} enabledOutputs Values to be included in response
@@ -142,4 +142,4 @@ class GwaDb {
   }
 }
 
-module.exports = {GwaDb, DbProvider};
+export {GwaDb};

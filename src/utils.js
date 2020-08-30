@@ -1,6 +1,6 @@
-const fs = require('fs');
-const {homedir} = require('os');
-const {sep} = require('path');
+import {constants, accessSync} from 'fs';
+import {homedir} from 'os';
+import {sep} from 'path';
 
 /**
  * Convert *nix shell ~ path to absolute path
@@ -52,11 +52,12 @@ function isPosixUsername(user) {
  * @param {string} path Filesystem path to file or directory
  * @param {number} mode Accessibility check to perform
  */
-function assertPath(path, mode = fs.constants.F_OK) {
+function assertPath(path, mode = constants.F_OK) {
   if (typeof path !== 'string' || !path) {
     throw new Error('Path not defined');
   }
-  fs.accessSync(path, mode);
+  accessSync(path, mode);
 }
 
-module.exports = {expandTildePath, assertPath};
+export {expandTildePath, assertPath};
+export default {expandTildePath, assertPath};

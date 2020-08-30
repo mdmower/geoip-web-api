@@ -152,7 +152,9 @@ npx geoip-web-api --config="/path/to/config.json"
 ### Node.js module
 
 ```JavaScript
-const GeoIpWebApi = require('geoip-web-api');
+import GeoIpWebApi from 'geoip-web-api';
+// Or using require() syntax:
+// const GeoIpWebApi = require('geoip-web-api').GeoIpWebApi;
 const options = {...};
 const geoIpWebApi = new GeoIpWebApi(options);
 

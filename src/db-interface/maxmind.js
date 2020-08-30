@@ -1,6 +1,6 @@
-const maxmind = require('maxmind');
-const {GwaLog} = require('../log');
-const {assertPath} = require('../utils');
+import {open} from 'maxmind';
+import {GwaLog} from '../log';
+import {assertPath} from '../utils';
 
 /**
  * Options for GwaMaxMind initialization
@@ -11,7 +11,7 @@ const {assertPath} = require('../utils');
 /** @constant */
 const LOG_TAG = 'GwaMaxMind';
 
-class GwaMaxMind {
+export default class GwaMaxMind {
   /**
    * @param {?MaxMindOptions} options MaxMind database and reader options
    * @param {GwaLog} log Log instance
@@ -52,7 +52,7 @@ class GwaMaxMind {
 
     this.log_.debug(`[${LOG_TAG}] Preparing MaxMind database reader`);
     try {
-      this.dbReader_ = await maxmind.open(dbPath, {
+      this.dbReader_ = await open(dbPath, {
         watchForUpdates: true,
       });
     } catch (ex) {
@@ -130,4 +130,4 @@ class GwaMaxMind {
   }
 }
 
-module.exports = {GwaMaxMind};
+export {GwaMaxMind};

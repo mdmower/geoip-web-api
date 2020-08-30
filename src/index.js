@@ -1,6 +1,6 @@
-const {GwaServer} = require('./server');
+import {GwaServer} from './server';
 
-class GeoIpWebApi {
+export default class GeoIpWebApi {
   /**
    * @param {Object.<string, any> | undefined} options User options
    */
@@ -26,4 +26,4 @@ class GeoIpWebApi {
   }
 }
 
-module.exports = GeoIpWebApi;
+export {GeoIpWebApi};

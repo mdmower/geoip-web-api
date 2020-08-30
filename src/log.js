@@ -1,7 +1,7 @@
 /**
  * @enum {number}
  */
-const LogLevel = {
+export const LogLevel = {
   OFF: 0,
   ERROR: 1,
   WARN: 2,
@@ -9,7 +9,7 @@ const LogLevel = {
   DEBUG: 4,
 };
 
-class GwaLog {
+export default class GwaLog {
   /**
    * @param {LogLevel | undefined} level Log level
    */
@@ -72,4 +72,4 @@ class GwaLog {
   }
 }
 
-module.exports = {GwaLog, LogLevel};
+export {GwaLog};

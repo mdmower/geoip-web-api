@@ -1,6 +1,6 @@
-const {Ip2lReader} = require('ip2ldb-reader');
-const {GwaLog} = require('../log');
-const {assertPath} = require('../utils');
+import {Ip2lReader} from 'ip2ldb-reader';
+import {GwaLog} from '../log';
+import {assertPath} from '../utils';
 
 /**
  * Options for GwaIP2Location initialization
@@ -12,7 +12,7 @@ const {assertPath} = require('../utils');
 /** @constant */
 const LOG_TAG = 'GwaIP2Location';
 
-class GwaIP2Location {
+export default class GwaIP2Location {
   /**
    * @param {?IP2LocationOptions} options IP2Location database and reader options
    * @param {GwaLog} log Log instance
@@ -127,4 +127,4 @@ class GwaIP2Location {
   }
 }
 
-module.exports = {GwaIP2Location};
+export {GwaIP2Location};
