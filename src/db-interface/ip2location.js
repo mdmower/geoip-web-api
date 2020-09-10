@@ -14,7 +14,7 @@ const LOG_TAG = 'GwaIP2Location';
 
 export default class GwaIP2Location {
   /**
-   * @param {?IP2LocationOptions} options IP2Location database and reader options
+   * @param {IP2LocationOptions|undefined} options IP2Location database and reader options
    * @param {GwaLog} log Log instance
    */
   constructor(options, log) {

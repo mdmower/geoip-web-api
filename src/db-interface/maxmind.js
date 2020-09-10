@@ -13,7 +13,7 @@ const LOG_TAG = 'GwaMaxMind';
 
 export default class GwaMaxMind {
   /**
-   * @param {?MaxMindOptions} options MaxMind database and reader options
+   * @param {MaxMindOptions|undefined} options MaxMind database and reader options
    * @param {GwaLog} log Log instance
    */
   constructor(options, log) {
