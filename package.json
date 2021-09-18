@@ -4,7 +4,7 @@
   "description": "An AMP-GEO compatible location web API",
   "main": "lib/index.js",
   "scripts": {
-    "clean": "node build/clean.js",
+    "clean": "rimraf lib",
     "debug": "node --inspect-brk lib/cli.js",
     "debug-src": "node --inspect-brk src/cli.js",
     "start": "node lib/cli.js",
@@ -52,6 +52,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "fs-extra": "^10.0.0",
     "prettier": "^2.3.2",
+    "rimraf": "^3.0.2",
     "typescript": "^4.4.2"
   }
 }
