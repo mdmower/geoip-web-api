@@ -24,7 +24,7 @@ This module uses [ip2ldb-reader](https://github.com/mdmower/ip2ldb-reader) for t
 
 ## Installation
 
-This module has been tested with Node.js 10, 12, and 14. Feel free to try other versions, but additional support is not promised.
+This module has been tested with Node.js 10, 12, 14, and 16. Feel free to try other versions, but additional support is not promised.
 
 Local installation
 
@@ -62,7 +62,7 @@ All properties are optional, provided the defaults are suitable.
   // {boolean} Pretty JSON output
   "prettyOutput": false,
 
-  // {Object.<string, ?string>} Dictionary of HTTP response headers for GET requests
+  // {Object.<string, string|null>} Dictionary of HTTP response headers for GET requests
   "getHeaders": {},
 
   // {Array<string>} Array of GET paths to which HTTP server should respond
@@ -80,7 +80,7 @@ All properties are optional, provided the defaults are suitable.
   // {Object.<string, string>} MaxMind database and reader options
   "maxmind": {
     // {string} Filesystem path to MaxMind database (in MMDB format)
-    "dbPath": path.join(process.cwd(), 'GeoLite2-Country.mmdb')
+    "dbPath": "./GeoLite2-Country.mmdb"
   },
 
   // {Object.<string, string>} IP2Location database and reader options
