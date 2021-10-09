@@ -13,7 +13,8 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint src",
     "prepublishOnly": "npm run build-release",
-    "start": "node lib/cli.js"
+    "start": "node lib/cli.js",
+    "test": "jest"
   },
   "bin": {
     "geoip-web-api": "lib/cli.js"
@@ -37,6 +38,14 @@
     "url": "https://github.com/mdmower/geoip-web-api/issues"
   },
   "homepage": "https://github.com/mdmower/geoip-web-api#readme",
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "verbose": true,
+    "modulePathIgnorePatterns": [
+      "<rootDir>/lib/"
+    ]
+  },
   "dependencies": {
     "express": "^4.17.1",
     "ip2ldb-reader": "^2.0.0",
@@ -45,6 +54,7 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
+    "@types/jest": "^27.0.2",
     "@types/minimist": "^1.2.2",
     "@types/node": "^16.9.6",
     "@typescript-eslint/eslint-plugin": "^4.31.2",
@@ -54,8 +64,10 @@
     "eslint-plugin-jsdoc": "^36.1.0",
     "eslint-plugin-prettier": "^4.0.0",
     "fs-extra": "^10.0.0",
+    "jest": "^27.2.1",
     "prettier": "^2.4.1",
     "rimraf": "^3.0.2",
+    "ts-jest": "^27.0.5",
     "typescript": "^4.4.3"
   }
 }

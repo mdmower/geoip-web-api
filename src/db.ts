@@ -6,11 +6,13 @@ import {GwaMaxMind} from './db-interface/maxmind';
 import {IP2LocationOptions} from './db-interface/ip2location';
 import {MaxMindOptions} from './db-interface/maxmind';
 import {isIP} from 'net';
+import {GwaDbiForTesting} from './db-interface/for-testing';
 
 const LOG_TAG = 'GwaDb';
 
 export enum DbProvider {
   UNKNOWN,
+  FORTESTING,
   MAXMIND,
   IP2LOCATION,
 }
@@ -79,6 +81,8 @@ export default class GwaDb {
         throw new Error(`[${LOG_TAG}] IP2Location database indicated but options not available`);
       }
       return new GwaIP2Location(gwaDbOptions.ip2LocationOptions, this.log_);
+    } else if (gwaDbOptions.dbProvider === DbProvider.FORTESTING) {
+      return new GwaDbiForTesting(this.log_);
     }
 
     throw new Error(`[${LOG_TAG}] Could not identify a database to load`);
