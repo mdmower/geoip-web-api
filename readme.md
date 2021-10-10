@@ -1,7 +1,7 @@
 # geoip-web-api
 
-![npm](https://img.shields.io/npm/v/geoip-web-api)
-![NPM](https://img.shields.io/npm/l/geoip-web-api)
+[![npm](https://img.shields.io/npm/v/geoip-web-api)](https://www.npmjs.com/package/geoip-web-api)
+[![NPM](https://img.shields.io/npm/l/geoip-web-api)](./LICENSE)
 
 A web API for IP-based geolocation. Both IPv4 and IPv6 are supported. Suitable for use as an [amp-geo fallback](https://github.com/ampproject/amphtml/blob/master/spec/amp-framework-hosting.md#amp-geo-fallback-api) when self-hosting the AMP framework.
 
