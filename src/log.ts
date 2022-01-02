@@ -22,7 +22,7 @@ class GwaLog {
    */
   public debug(...args: any[]): void {
     if (this.level_ >= LogLevel.DEBUG) {
-      console.debug(...args);
+      console.debug.apply(console, args);
     }
   }
 
@@ -32,7 +32,7 @@ class GwaLog {
    */
   public info(...args: any[]): void {
     if (this.level_ >= LogLevel.INFO) {
-      console.log(...args);
+      console.log.apply(console, args);
     }
   }
 
@@ -42,7 +42,7 @@ class GwaLog {
    */
   public warn(...args: any[]): void {
     if (this.level_ >= LogLevel.WARN) {
-      console.warn(...args);
+      console.warn.apply(console, args);
     }
   }
 
@@ -52,7 +52,7 @@ class GwaLog {
    */
   public error(...args: any[]): void {
     if (this.level_ >= LogLevel.ERROR) {
-      console.error(...args);
+      console.error.apply(console, args);
     }
   }
 
