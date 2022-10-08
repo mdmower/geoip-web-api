@@ -60,7 +60,7 @@ function assertPath(path: string, mode: number = constants.F_OK): void {
  * Get the keys of an interface (object) with their types intact
  * @param obj Object with typed keys
  */
-function typedKeys<T>(obj: T): (keyof T)[] {
+function typedKeys<T extends object>(obj: T): (keyof T)[] {
   return Object.keys(obj) as (keyof T)[];
 }
 
