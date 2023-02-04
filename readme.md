@@ -27,7 +27,7 @@ This module uses [ip2ldb-reader](https://github.com/mdmower/ip2ldb-reader) for t
 
 ## Installation
 
-This module has been tested with Node.js 10, 12, 14, and 16. Feel free to try other versions, but additional support is not promised.
+This module has been tested with Node.js LTS 14, 16, and 18. Feel free test other versions of Node.js and [let me know](https://github.com/mdmower/geoip-web-api/issues) if you encounter compatibility issues.
 
 Local installation
 
