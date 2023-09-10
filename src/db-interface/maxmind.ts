@@ -23,7 +23,10 @@ class GwaMaxMind implements DbInterface {
    * @param options MaxMind database and reader options
    * @param log_ Log instance
    */
-  constructor(options: MaxMindOptions, private log_: GwaLog) {
+  constructor(
+    options: MaxMindOptions,
+    private log_: GwaLog
+  ) {
     assertPath(options.dbPath);
 
     this.dbPath_ = options.dbPath;

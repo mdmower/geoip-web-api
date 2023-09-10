@@ -61,7 +61,11 @@ export default class GwaDb {
    * @param dbOptions Database and reader options
    * @param enabledOutputs Values to be included in response
    */
-  constructor(private log_: GwaLog, dbOptions: DbOptions, enabledOutputs: string[]) {
+  constructor(
+    private log_: GwaLog,
+    dbOptions: DbOptions,
+    enabledOutputs: string[]
+  ) {
     this.dbInterface_ = this.getDbInterface(dbOptions);
     this.enabledOutputs_ = enabledOutputs;
   }
@@ -131,7 +135,7 @@ export default class GwaDb {
    * @param ipVersion Request IP version
    */
   public geoIpApiResponse(
-    dbResult: unknown | null,
+    dbResult: unknown,
     ip: string | null,
     ipVersion: number | null
   ): GeoIpApiResponse {

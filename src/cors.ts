@@ -26,7 +26,10 @@ export default class GwaCors {
    * @param log_ Log instance
    * @param options Cross-origin requests options
    */
-  constructor(private log_: GwaLog, options: CorsOptions) {
+  constructor(
+    private log_: GwaLog,
+    options: CorsOptions
+  ) {
     this.origins_ = this.sanitizeOrigins(options.origins);
     this.originRegEx_ = this.parseOriginsRegEx(options.originRegEx);
   }

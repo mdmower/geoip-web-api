@@ -3,7 +3,7 @@ import {DbProvider, DbOptions} from './db';
 import {IP2LocationOptions} from './db-interface/ip2location';
 import {LogLevel} from './log';
 import {MaxMindOptions} from './db-interface/maxmind';
-import {expandTildePath, typedKeys, isObject} from './utils';
+import {expandTildePath, typedKeys, isRecord, isLogLevel, isPort} from './utils';
 import {join as pathJoin} from 'path';
 
 // const LOG_TAG = 'GwaOptions';
@@ -204,41 +204,32 @@ function getDefaultAppOptions(): SanitizedOptions {
 
 /**
  * Safely overlay values in default options object with user options object
- * @param unsafeSrc Source options
+ * @param src Source options
  */
-function overlayOptions(unsafeSrc: any): SanitizedOptions {
+function overlayOptions(src: any): SanitizedOptions {
   const target = getDefaultAppOptions();
-  const src = isObject(unsafeSrc) ? (unsafeSrc as Record<string, any>) : undefined;
-  if (!src) {
+  if (!isRecord(src)) {
     return target;
   }
 
   // Log level
-  const logLevel = typeof src.logLevel === 'number' ? src.logLevel : undefined;
-  if (logLevel !== undefined && logLevel >= LogLevel.OFF && logLevel <= LogLevel.DEBUG) {
-    target.logLevel = Math.floor(logLevel) as LogLevel;
+  if (isLogLevel(src.logLevel)) {
+    target.logLevel = src.logLevel;
   }
 
   // Only set HTTP server port if a valid value is available
-  const port = typeof src.port === 'number' ? src.port : undefined;
-  if (port !== undefined && port >= 0 && port <= 65535) {
-    target.port = Math.floor(port);
+  if (isPort(src.port)) {
+    target.port = src.port;
   }
 
   // Enabled outputs
-  const enabledOutputs = isObject(src.enabledOutputs)
-    ? (src.enabledOutputs as Record<string, any>)
-    : undefined;
-  if (enabledOutputs) {
-    typedKeys(target.enabledOutputs).forEach((output) => {
-      const outputValue =
-        typeof enabledOutputs[output] === 'boolean'
-          ? (enabledOutputs[output] as boolean)
-          : undefined;
-      if (outputValue !== undefined) {
-        target.enabledOutputs[output] = outputValue;
+  if (isRecord(src.enabledOutputs)) {
+    for (const key of typedKeys(target.enabledOutputs)) {
+      const value = src.enabledOutputs[key];
+      if (typeof value === 'boolean') {
+        target.enabledOutputs[key] = value;
       }
-    });
+    }
   }
 
   // Pretty JSON output
@@ -247,37 +238,32 @@ function overlayOptions(unsafeSrc: any): SanitizedOptions {
   }
 
   // GET headers
-  const getHeaders = isObject(src.getHeaders) ? (src.getHeaders as Record<string, any>) : undefined;
-  if (getHeaders) {
-    // Only allow string header keys and string or null values
-    // which indicate that a header should be removed (if possible).
-    // Retain only the last definition of a header if multiple
-    // exist with distinct cases, all the while retaining the
-    // user's original casing of the header name.
-    Object.keys(getHeaders).forEach((key) => {
-      const headerValue =
-        typeof getHeaders[key] === 'string' || getHeaders[key] === null
-          ? (getHeaders[key] as string | null)
-          : undefined;
-      if (headerValue !== undefined) {
-        const duplicateKey = Object.keys(target.getHeaders).find(
-          (h) => h.toLowerCase() === key.toLowerCase()
-        );
-        if (duplicateKey) {
-          delete target.getHeaders[duplicateKey];
-        }
-        target.getHeaders[key] = headerValue;
+  if (isRecord(src.getHeaders)) {
+    for (const key of Object.keys(src.getHeaders)) {
+      // Only allow string header keys and string or null values which indicate that a header should
+      // be removed (if possible). Retain only the last definition of a header if multiple exist
+      // with distinct cases, all the while retaining the user's original casing of the header name.
+      const value = src.getHeaders[key];
+      if (typeof value !== 'string' && value !== null) {
+        continue;
       }
-    });
+
+      const duplicateKey = Object.keys(target.getHeaders).find(
+        (targetKey) => targetKey.toLowerCase() === key.toLowerCase()
+      );
+      if (duplicateKey) {
+        delete target.getHeaders[duplicateKey];
+      }
+      target.getHeaders[key] = value;
+    }
   }
 
   // Validation of GET routes via path-to-regexp package doesn't look reliable:
   // https://github.com/pillarjs/path-to-regexp#compatibility-with-express--4x
   // Express seems to tolerate some very invalid path definitions. There's not
   // much to do here other than verify strings.
-  const getPaths = Array.isArray(src.getPaths) ? (src.getPaths as unknown[]) : undefined;
-  if (getPaths) {
-    const filteredPaths = getPaths
+  if (Array.isArray(src.getPaths)) {
+    const filteredPaths = (src.getPaths as unknown[])
       .map((p) => (typeof p === 'string' ? p.trim() : ''))
       .filter(Boolean);
     if (filteredPaths.length) {
@@ -286,33 +272,27 @@ function overlayOptions(unsafeSrc: any): SanitizedOptions {
   }
 
   // CORS properties are undefined by default, so only modify if good values are found
-  const cors = isObject(src.cors) ? (src.cors as Record<string, any>) : undefined;
-  if (cors) {
-    const origins = Array.isArray(cors.origins) ? (cors.origins as unknown[]) : undefined;
-    if (origins) {
-      // Filter out non-string and empty values.
-      // URL validity will be checked in Cors class.
-      target.cors.origins = origins
+  if (isRecord(src.cors)) {
+    if (Array.isArray(src.cors.origins)) {
+      // Filter out non-string and empty values. URL validity will be checked in Cors class.
+      target.cors.origins = (src.cors.origins as unknown[])
         .map((o) => (typeof o === 'string' ? o.trim() : ''))
         .filter(Boolean);
     }
 
-    const originRegEx =
-      typeof cors.originRegEx === 'string' || cors.originRegEx instanceof RegExp
-        ? cors.originRegEx
-        : undefined;
-    if (originRegEx) {
-      target.cors.originRegEx = originRegEx;
+    if (typeof src.cors.originRegEx === 'string' || src.cors.originRegEx instanceof RegExp) {
+      target.cors.originRegEx = src.cors.originRegEx;
     }
   }
 
   let dbDefined = false;
 
   // MaxMind properties
-  const maxmind = isObject(src.maxmind) ? (src.maxmind as Record<string, any>) : undefined;
-  if (maxmind) {
+  if (isRecord(src.maxmind)) {
     const dbPath =
-      typeof maxmind.dbPath === 'string' ? expandTildePath(maxmind.dbPath.trim()) : undefined;
+      typeof src.maxmind.dbPath === 'string'
+        ? expandTildePath(src.maxmind.dbPath.trim())
+        : undefined;
     if (dbPath) {
       target.dbOptions = {
         dbProvider: DbProvider.MAXMIND,
@@ -323,26 +303,21 @@ function overlayOptions(unsafeSrc: any): SanitizedOptions {
   }
 
   // IP2Location properties
-  if (!dbDefined) {
-    const ip2location = isObject(src.ip2location)
-      ? (src.ip2location as Record<string, any>)
-      : undefined;
-    if (ip2location) {
-      const dbPath =
-        typeof ip2location.dbPath === 'string'
-          ? expandTildePath(ip2location.dbPath.trim())
+  if (!dbDefined && isRecord(src.ip2location)) {
+    const dbPath =
+      typeof src.ip2location.dbPath === 'string'
+        ? expandTildePath(src.ip2location.dbPath.trim())
+        : undefined;
+    if (dbPath) {
+      // Subdivision support is optional and requires a separate CSV database
+      const subdivisionCsvPath =
+        typeof src.ip2location.subdivisionCsvPath === 'string'
+          ? expandTildePath(src.ip2location.subdivisionCsvPath.trim())
           : undefined;
-      if (dbPath) {
-        // Subdivision support is optional and requires a separate CSV database
-        const subdivisionCsvPath =
-          typeof ip2location.subdivisionCsvPath === 'string'
-            ? expandTildePath(ip2location.subdivisionCsvPath.trim())
-            : undefined;
-        target.dbOptions = {
-          dbProvider: DbProvider.IP2LOCATION,
-          ip2LocationOptions: {dbPath, subdivisionCsvPath},
-        };
-      }
+      target.dbOptions = {
+        dbProvider: DbProvider.IP2LOCATION,
+        ip2LocationOptions: {dbPath, subdivisionCsvPath},
+      };
     }
   }
 

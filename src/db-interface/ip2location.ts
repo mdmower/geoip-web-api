@@ -24,7 +24,10 @@ class GwaIP2Location implements DbInterface {
   private subdivisionCsvPath_: string | undefined;
   private dbReader_: Ip2lReader | undefined;
 
-  constructor(options: IP2LocationOptions, private log_: GwaLog) {
+  constructor(
+    options: IP2LocationOptions,
+    private log_: GwaLog
+  ) {
     assertPath(options.dbPath);
 
     this.dbPath_ = options.dbPath;

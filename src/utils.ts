@@ -1,6 +1,7 @@
 import {constants, accessSync} from 'fs';
 import {homedir} from 'os';
 import {sep} from 'path';
+import {LogLevel} from './log';
 
 /**
  * Convert *nix shell ~ path to absolute path
@@ -68,9 +69,30 @@ function typedKeys<T extends object>(obj: T): (keyof T)[] {
  * Determine whether a variable is an object (excluding functions, arrays, and null)
  * @param obj Candidate object
  */
-function isObject(obj: unknown): boolean {
+function isRecord(obj: unknown): obj is Record<string, unknown> {
   return typeof obj === 'object' && !!obj && !Array.isArray(obj);
 }
 
-export {expandTildePath, assertPath, typedKeys, isObject};
-export default {expandTildePath, assertPath, typedKeys, isObject};
+/**
+ * Determine whether a variable is a valid LogLevel
+ * @param value Candidate value
+ */
+function isLogLevel(value: unknown): value is LogLevel {
+  return (
+    typeof value === 'number' &&
+    Math.floor(value) === value &&
+    value >= (LogLevel.OFF as number) &&
+    value <= (LogLevel.DEBUG as number)
+  );
+}
+
+/**
+ * Determine whether a variable is a valid port
+ * @param value Candidate value
+ */
+function isPort(value: unknown): value is number {
+  return typeof value === 'number' && Math.floor(value) === value && value >= 0 && value <= 65535;
+}
+
+export {expandTildePath, assertPath, typedKeys, isRecord, isLogLevel, isPort};
+export default {expandTildePath, assertPath, typedKeys, isRecord, isLogLevel, isPort};
