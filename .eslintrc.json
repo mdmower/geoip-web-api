@@ -10,13 +10,13 @@
   },
   "plugins": ["@typescript-eslint", "jsdoc", "prettier"],
   "extends": [
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended-type-checked",
     "prettier",
     "plugin:jsdoc/recommended"
   ],
   "rules": {
-    "prettier/prettier": ["error"],
+    "prettier/prettier": "error",
     "no-var": "error",
     "prefer-const": [
       "error",
@@ -24,9 +24,7 @@
         "destructuring": "all"
       }
     ],
-    "prefer-spread": "off",
     "@typescript-eslint/no-inferrable-types": "off",
-    "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/explicit-module-boundary-types": [
       "error",
       {
@@ -37,7 +35,13 @@
       "error",
       {"accessibility": "explicit", "overrides": {"constructors": "no-public"}}
     ],
-    "jsdoc/require-jsdoc": 1,
+    "jsdoc/require-jsdoc": [
+      "error",
+      {
+        "checkConstructors": false,
+        "contexts": ["MethodDefinition", "FunctionDeclaration"]
+      }
+    ],
     "jsdoc/require-param": [
       "error",
       {
@@ -53,12 +57,12 @@
         ]
       }
     ],
-    "jsdoc/check-syntax": 1,
-    "jsdoc/newline-after-description": 0,
-    "jsdoc/check-types": 0,
-    "jsdoc/require-returns": 0,
-    "jsdoc/require-returns-description": 0,
-    "jsdoc/require-param-type": 0
+    "jsdoc/check-syntax": "error",
+    "jsdoc/newline-after-description": "off",
+    "jsdoc/check-types": "off",
+    "jsdoc/require-returns": "off",
+    "jsdoc/require-returns-description": "off",
+    "jsdoc/require-param-type": "off"
   },
   "settings": {
     "jsdoc": {

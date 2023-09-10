@@ -8,143 +8,73 @@ import {join as pathJoin} from 'path';
 
 // const LOG_TAG = 'GwaOptions';
 
-/**
- * Application initialization options
- */
+/** Application initialization options */
 interface AppOptions {
-  /**
-   * Loging level
-   */
+  /** Loging level */
   logLevel?: LogLevel;
 
-  /**
-   * Port where HTTP server should listen
-   */
+  /** Port where HTTP server should listen */
   port?: number;
 
-  /**
-   * Individual outputs that should be included in the response
-   */
+  /** Individual outputs that should be included in the response */
   enabledOutputs?: EnabledOutputs;
 
-  /**
-   * Pretty JSON output
-   */
+  /** Pretty JSON output */
   prettyOutput?: boolean;
 
-  /**
-   * Dictionary of HTTP response headers for GET requests
-   */
+  /** Dictionary of HTTP response headers for GET requests */
   getHeaders?: {[header: string]: string | null | undefined};
 
-  /**
-   * Array of paths to match for GET requests
-   */
+  /** Array of paths to match for GET requests */
   getPaths?: string[];
 
-  /**
-   * Allowed CORS origin tests
-   */
+  /** Allowed CORS origin tests */
   cors?: CorsOptions;
 
-  /**
-   * MaxMind database and reader options
-   */
+  /** MaxMind database and reader options */
   maxmind?: MaxMindOptions;
 
-  /**
-   * IP2Location database and reader options
-   */
+  /** IP2Location database and reader options */
   ip2location?: IP2LocationOptions;
 }
 
-/**
- * Sanitized application initialization options
- */
-interface SanitizedOptions {
-  /**
-   * Loging level
-   */
-  logLevel: LogLevel;
-
-  /**
-   * Port where HTTP server should listen
-   */
-  port: number;
-
-  /**
-   * Individual outputs that should be included in the response
-   */
-  enabledOutputs: EnabledOutputs;
-
-  /**
-   * Pretty JSON output
-   */
-  prettyOutput: boolean;
-
-  /**
-   * Dictionary of HTTP response headers for GET requests
-   */
-  getHeaders: {[header: string]: string | null | undefined};
-
-  /**
-   * Array of paths to match for GET requests
-   */
-  getPaths: string[];
-
-  /**
-   * Allowed CORS origin tests
-   */
-  cors: CorsOptions;
-
-  /**
-   * Database and reader options
-   */
-  dbOptions: DbOptions;
-}
-
-/**
- * Individual outputs that should be included in the response
- */
+/** Individual outputs that should be included in the response */
 interface EnabledOutputs {
-  /**
-   * Enable country code output
-   */
+  /** Enable country code output */
   country?: boolean;
 
-  /**
-   * Enable subdivision code output
-   */
+  /** Enable subdivision code output */
   subdivision?: boolean;
 
-  /**
-   * Enable IP output
-   */
+  /** Enable IP output */
   ip?: boolean;
 
-  /**
-   * Enable IP number output
-   */
+  /** Enable IP number output */
   ip_version?: boolean;
 
-  /**
-   * Enable raw data output from DB lookup
-   */
+  /** Enable raw data output from DB lookup */
   data?: boolean;
 }
 
-/**
- * Individual default options
- */
+/** Sanitized application initialization options */
+type SanitizedOptions = Required<Omit<AppOptions, 'maxmind' | 'ip2location'>> & {
+  /** Database and reader options */
+  dbOptions: DbOptions;
+};
+
+/** Individual default options */
 class DefaultOptions {
+  /** Loging level */
   public static get logLevel(): LogLevel {
     return LogLevel.INFO;
   }
 
+  /** Port where HTTP server should listen */
   public static get port(): number {
     return 3000;
   }
 
+  /** Individual outputs that should be included in the response */
   public static get enabledOutputs(): EnabledOutputs {
     return {
       country: true,
@@ -155,20 +85,24 @@ class DefaultOptions {
     };
   }
 
+  /** Pretty JSON output */
   public static get prettyOutput(): boolean {
     return false;
   }
 
   // Suggested headers for AMP-GEO fallback API:
   // https://github.com/ampproject/amphtml/blob/master/spec/amp-framework-hosting.md#amp-geo-fallback-api
+  /** Dictionary of HTTP response headers for GET requests */
   public static get getHeaders(): {[header: string]: string | null | undefined} {
     return {};
   }
 
+  /** Array of paths to match for GET requests */
   public static get getPaths(): string[] {
     return ['/', '/*'];
   }
 
+  /** Allowed CORS origin tests */
   public static get cors(): CorsOptions {
     return {
       origins: undefined,
@@ -176,6 +110,7 @@ class DefaultOptions {
     };
   }
 
+  /** Database and reader options */
   public static get dbOptions(): DbOptions {
     return {
       dbProvider: DbProvider.MAXMIND,
@@ -206,7 +141,7 @@ function getDefaultAppOptions(): SanitizedOptions {
  * Safely overlay values in default options object with user options object
  * @param src Source options
  */
-function overlayOptions(src: any): SanitizedOptions {
+function overlayOptions(src: unknown): SanitizedOptions {
   const target = getDefaultAppOptions();
   if (!isRecord(src)) {
     return target;

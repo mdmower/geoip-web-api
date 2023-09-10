@@ -16,6 +16,9 @@ class GwaLog {
     this.level_ = level !== undefined ? level : LogLevel.INFO;
   }
 
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  /* eslint-disable prefer-spread */
+
   /**
    * Log debug message
    * @param args Arguments for console.debug
@@ -55,6 +58,9 @@ class GwaLog {
       console.error.apply(console, args);
     }
   }
+
+  /* eslint-enable @typescript-eslint/no-explicit-any */
+  /* eslint-enable prefer-spread */
 
   /**
    * Set log level

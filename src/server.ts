@@ -8,33 +8,21 @@ import {typedKeys} from './utils';
 
 const LOG_TAG = 'GwaServer';
 
-/**
- * GeoIP API response; conforms to AMP-GEO fallback API response JSON schema version 0.2
- */
+/** GeoIP API response; conforms to AMP-GEO fallback API response JSON schema version 0.2 */
 interface GeoIpApiResponse {
-  /**
-   * ISO 3166-1 alpha-2 country code
-   */
+  /** ISO 3166-1 alpha-2 country code */
   country?: string;
 
-  /**
-   * Subdivision part of ISO 3166-2 country-subdivision code
-   */
+  /** Subdivision part of ISO 3166-2 country-subdivision code */
   subdivision?: string;
 
-  /**
-   * Request IP
-   */
+  /** Request IP */
   ip?: string;
 
-  /**
-   * Request IP version
-   */
+  /** Request IP version */
   ip_version?: number;
 
-  /**
-   * Complete database result
-   */
+  /** Complete database result */
   data?: unknown;
 }
 

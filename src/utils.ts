@@ -42,7 +42,7 @@ function expandTildePath(path: string): string {
  * @param user Username to check
  */
 function isPosixUsername(user: string): boolean {
-  return /^[\w.][\w.\-]*$/.test(user);
+  return /^[\w.][\w.-]*$/.test(user);
 }
 
 /**
