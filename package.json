@@ -12,7 +12,7 @@
     "debug": "node --inspect-brk lib/cli.js",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint src",
-    "prepublishOnly": "npm run build-release",
+    "prepare": "npm run clean && npm run compile-release",
     "start": "node lib/cli.js",
     "test": "jest"
   },
@@ -20,7 +20,7 @@
     "geoip-web-api": "lib/cli.js"
   },
   "files": [
-    "lib/**/*"
+    "/lib"
   ],
   "repository": {
     "type": "git",

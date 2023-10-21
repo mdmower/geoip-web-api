@@ -7,7 +7,7 @@
     "strict": true,
     "esModuleInterop": true,
     "outDir": "lib",
-    "sourceMap": true,
+    "sourceMap": false,
     "declaration": true
   },
   "include": ["src/**/*"],
