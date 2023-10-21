@@ -121,15 +121,17 @@ class GwaServer {
     this.log_.debug(`[${LOG_TAG}] Looking up IP: ${req.ip}`);
     let geoIpApiResponse: GeoIpApiResponse | null = null;
 
-    try {
-      const ipLookup = await this.db_.lookup(req.ip);
-      if (!ipLookup.error) {
-        geoIpApiResponse = ipLookup.geoIpApiResponse;
-      } else {
-        this.log_.error(`[${LOG_TAG}] Failed to lookup IP\n`, ipLookup.error);
+    if (req.ip) {
+      try {
+        const ipLookup = await this.db_.lookup(req.ip);
+        if (!ipLookup.error) {
+          geoIpApiResponse = ipLookup.geoIpApiResponse;
+        } else {
+          this.log_.error(`[${LOG_TAG}] Failed to lookup IP\n`, ipLookup.error);
+        }
+      } catch (ex) {
+        this.log_.error(`[${LOG_TAG}] DB lookup encountered an exception\n`, ex);
       }
-    } catch (ex) {
-      this.log_.error(`[${LOG_TAG}] DB lookup encountered an exception\n`, ex);
     }
 
     // Make sure a response body is available
