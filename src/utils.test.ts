@@ -6,7 +6,8 @@ jest.mock('os');
 const homedirMock = homedir as jest.Mock;
 
 // Redefine path.sep as a getter so that we can use jest.spyOn
-Object.defineProperty(path, 'sep', {get: () => path.sep});
+const originalSep = path.sep;
+Object.defineProperty(path, 'sep', {get: () => originalSep});
 
 describe('Expand ~ on *nix', () => {
   beforeAll(() => {
