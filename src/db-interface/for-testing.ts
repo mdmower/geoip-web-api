@@ -1,5 +1,5 @@
-import {DbInterface} from './dbi';
-import {GwaLog} from '../log';
+import {DbInterface} from './dbi.js';
+import {GwaLog} from '../log.js';
 
 const LOG_TAG = 'GwaDbiForTesting';
 

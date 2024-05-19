@@ -25,9 +25,13 @@ Optionally, if you need subdivision support, also download the [ISO 3166-2 Subdi
 
 This module uses [ip2ldb-reader](https://github.com/mdmower/ip2ldb-reader) for the database reader. When the database is updated on the filesystem, the reader should automatically reload without needing to restart this module.
 
+## Requirements
+
+- Minimum supported Node.js version: 18.19.0
+
 ## Installation
 
-This module has been tested with Node.js LTS 14, 16, and 18. Feel free test other versions of Node.js and [let me know](https://github.com/mdmower/geoip-web-api/issues) if you encounter compatibility issues.
+This module has been tested with Node.js LTS 18 and 20. Feel free to test newer versions of Node.js and [let me know](https://github.com/mdmower/geoip-web-api/issues) if you encounter compatibility issues.
 
 Local installation
 
@@ -45,7 +49,7 @@ npm install -g geoip-web-api
 
 All properties are optional, provided the defaults are suitable.
 
-```JavaScript
+```js
 {
   // {number} Log level (0:Off, 1:Error, 2:Warn, 3:Info, 4:Debug)
   "logLevel": 3,
@@ -113,7 +117,7 @@ When running this module as a command line application, these options should be 
 
 ### Example options
 
-```JSON
+```json
 {
   "logLevel": 1,
   "port": 8080,
@@ -142,22 +146,20 @@ When running this module as a command line application, these options should be 
 
 If installed globally:
 
-```bash
+```sh
 geoip-web-api --config="/path/to/config.json"
 ```
 
 If installed locally:
 
-```bash
+```sh
 npx geoip-web-api --config="/path/to/config.json"
 ```
 
 ### Node.js module
 
-```JavaScript
+```js
 import GeoIpWebApi from 'geoip-web-api';
-// Or using require() syntax:
-// const GeoIpWebApi = require('geoip-web-api').GeoIpWebApi;
 const options = {...};
 const geoIpWebApi = new GeoIpWebApi(options);
 
@@ -189,7 +191,7 @@ The schema for `data` depends on the database used.
 
 Response conforms to [AMP-GEO fallback API schema 0.2](https://github.com/ampproject/amphtml/blob/f744c490be41f2553b24cb9f0f0efb5136477e79/extensions/amp-geo/0.1/amp-geo.js#L286-L307)
 
-```JSON
+```json
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
@@ -207,15 +209,13 @@ Response conforms to [AMP-GEO fallback API schema 0.2](https://github.com/amppro
       "pattern": "^[a-zA-Z0-9]{1,3}$"
     }
   },
-  "required": [
-    "country"
-  ]
+  "required": ["country"]
 }
 ```
 
 ### Sample response
 
-```JSON
+```json
 {
   "country": "US",
   "subdivision": "CA"
@@ -230,7 +230,7 @@ The HTTP server ([Express](https://expressjs.com/)) in this module is designed t
 
 Listen for requests to `/geoip/` and forward to localhost port `8080`:
 
-```Nginx
+```nginx
 location ~ ^/geoip/ {
     proxy_set_header X-Forwarded-For $remote_addr;
     proxy_pass http://127.0.0.1:8080;

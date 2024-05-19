@@ -1,5 +1,4 @@
-import {GwaLog} from './log';
-import {URL} from 'url';
+import {GwaLog} from './log.js';
 
 const LOG_TAG = 'GwaCors';
 

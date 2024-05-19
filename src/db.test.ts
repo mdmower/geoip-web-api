@@ -1,7 +1,7 @@
-import {GwaDb, DbProvider} from './db';
-import {SampleResults} from './db-interface/for-testing';
-import {GwaLog, LogLevel} from './log';
-import {DefaultOptions} from './options';
+import {GwaDb, DbProvider} from './db.js';
+import {SampleResults} from './db-interface/for-testing.js';
+import {GwaLog, LogLevel} from './log.js';
+import {DefaultOptions} from './options.js';
 
 describe('Database', () => {
   let gwaLog: GwaLog;

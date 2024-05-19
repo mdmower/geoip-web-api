@@ -1,5 +1,5 @@
-import {AppOptions, overlayOptions} from './options';
-import {GwaServer} from './server';
+import {AppOptions, overlayOptions} from './options.js';
+import {GwaServer} from './server.js';
 
 export default class GeoIpWebApi {
   private _gwaServer: GwaServer;

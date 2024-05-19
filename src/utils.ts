@@ -1,7 +1,7 @@
-import {constants, accessSync} from 'fs';
-import {homedir} from 'os';
-import {sep} from 'path';
-import {LogLevel} from './log';
+import {constants, accessSync} from 'node:fs';
+import {homedir} from 'node:os';
+import {sep} from 'node:path';
+import {LogLevel} from './log.js';
 
 /**
  * Convert *nix shell ~ path to absolute path

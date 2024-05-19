@@ -1,8 +1,8 @@
-import {expandTildePath} from './utils';
-import {homedir} from 'os';
-import path from 'path';
+import {homedir} from 'node:os';
+import path from 'node:path';
+import {expandTildePath} from './utils.js';
 
-jest.mock('os');
+jest.mock('node:os');
 const homedirMock = homedir as jest.Mock;
 
 // Redefine path.sep as a getter so that we can use jest.spyOn

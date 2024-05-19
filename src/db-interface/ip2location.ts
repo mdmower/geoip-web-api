@@ -1,7 +1,7 @@
-import {DbInterface} from './dbi';
-import {GwaLog} from '../log';
 import {Ip2lReader, Ip2lData} from 'ip2ldb-reader';
-import {assertPath} from '../utils';
+import {DbInterface} from './dbi.js';
+import {GwaLog} from '../log.js';
+import {assertPath} from '../utils.js';
 
 const LOG_TAG = 'GwaIP2Location';
 

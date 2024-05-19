@@ -1,10 +1,10 @@
-import {CorsOptions} from './cors';
-import {DbProvider, DbOptions} from './db';
-import {IP2LocationOptions} from './db-interface/ip2location';
-import {LogLevel} from './log';
-import {MaxMindOptions} from './db-interface/maxmind';
-import {expandTildePath, typedKeys, isRecord, isLogLevel, isPort} from './utils';
-import {join as pathJoin} from 'path';
+import {join as pathJoin} from 'node:path';
+import {CorsOptions} from './cors.js';
+import {DbProvider, DbOptions} from './db.js';
+import {IP2LocationOptions} from './db-interface/ip2location.js';
+import {LogLevel} from './log.js';
+import {MaxMindOptions} from './db-interface/maxmind.js';
+import {expandTildePath, typedKeys, isRecord, isLogLevel, isPort} from './utils.js';
 
 // const LOG_TAG = 'GwaOptions';
 

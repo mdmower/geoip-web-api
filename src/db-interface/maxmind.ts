@@ -1,7 +1,7 @@
-import {DbInterface} from './dbi';
-import {GwaLog} from '../log';
-import {assertPath} from '../utils';
 import {open as mmOpen, Reader as mmReader, Response as mmResponse} from 'maxmind';
+import {DbInterface} from './dbi.js';
+import {GwaLog} from '../log.js';
+import {assertPath} from '../utils.js';
 
 const LOG_TAG = 'GwaMaxMind';
 

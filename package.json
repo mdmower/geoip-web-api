@@ -1,8 +1,8 @@
 {
   "name": "geoip-web-api",
-  "version": "2.0.11",
+  "version": "3.0.0",
   "description": "An AMP-GEO compatible location web API",
-  "main": "lib/index.js",
+  "type": "module",
   "scripts": {
     "build": "npm run lint && npm run clean && npm run compile",
     "build-release": "npm run lint && npm run clean && npm run compile-release",
@@ -15,6 +15,9 @@
     "prepare": "npm run clean && npm run compile-release",
     "start": "node lib/cli.js",
     "test": "jest"
+  },
+  "engines": {
+    "node": ">= 18.19.0"
   },
   "bin": {
     "geoip-web-api": "lib/cli.js"
@@ -44,11 +47,26 @@
     "verbose": true,
     "modulePathIgnorePatterns": [
       "<rootDir>/lib/"
+    ],
+    "transform": {
+      "\\.[jt]s$": [
+        "ts-jest",
+        {
+          "useESM": true,
+          "tsconfig": "tsconfig.json"
+        }
+      ]
+    },
+    "moduleNameMapper": {
+      "(.+)\\.js": "$1"
+    },
+    "extensionsToTreatAsEsm": [
+      ".ts"
     ]
   },
   "dependencies": {
     "express": "^4.19.2",
-    "ip2ldb-reader": "^2.1.6",
+    "ip2ldb-reader": "^3.0.0",
     "maxmind": "^4.3.18",
     "minimist": "^1.2.8"
   },

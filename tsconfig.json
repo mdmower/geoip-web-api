@@ -3,5 +3,6 @@
     "sourceMap": true
   },
   "extends": "./tsconfig.release.json",
+  "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }

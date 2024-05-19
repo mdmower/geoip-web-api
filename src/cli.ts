@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 import minimist from 'minimist';
-import {SanitizedOptions, overlayOptions} from './options';
-import {GwaServer} from './server';
-import {assertPath, expandTildePath} from './utils';
-import {createInterface} from 'readline';
-import {readFileSync} from 'fs';
+import {createInterface} from 'node:readline';
+import {readFileSync} from 'node:fs';
+import {SanitizedOptions, overlayOptions} from './options.js';
+import {GwaServer} from './server.js';
+import {assertPath, expandTildePath} from './utils.js';
 
 const LOG_TAG = 'GwaCli';
 

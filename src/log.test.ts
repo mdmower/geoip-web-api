@@ -1,4 +1,4 @@
-import {GwaLog, LogLevel} from './log';
+import {GwaLog, LogLevel} from './log.js';
 
 describe('Log', () => {
   let gwaLog: GwaLog;

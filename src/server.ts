@@ -1,10 +1,10 @@
+import {Server} from 'node:http';
 import express from 'express';
-import {GwaCors} from './cors';
-import {GwaLog} from './log';
-import {GwaDb} from './db';
-import {SanitizedOptions} from './options';
-import {Server} from 'http';
-import {typedKeys} from './utils';
+import {GwaCors} from './cors.js';
+import {GwaLog} from './log.js';
+import {GwaDb} from './db.js';
+import {SanitizedOptions} from './options.js';
+import {typedKeys} from './utils.js';
 
 const LOG_TAG = 'GwaServer';
 

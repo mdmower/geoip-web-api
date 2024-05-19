@@ -1,12 +1,12 @@
-import {DbInterface} from './db-interface/dbi';
-import {GeoIpApiResponse} from './server';
-import {GwaIP2Location} from './db-interface/ip2location';
-import {GwaLog} from './log';
-import {GwaMaxMind} from './db-interface/maxmind';
-import {IP2LocationOptions} from './db-interface/ip2location';
-import {MaxMindOptions} from './db-interface/maxmind';
-import {isIP} from 'net';
-import {GwaDbiForTesting} from './db-interface/for-testing';
+import {isIP} from 'node:net';
+import {DbInterface} from './db-interface/dbi.js';
+import {GeoIpApiResponse} from './server.js';
+import {GwaIP2Location} from './db-interface/ip2location.js';
+import {GwaLog} from './log.js';
+import {GwaMaxMind} from './db-interface/maxmind.js';
+import {IP2LocationOptions} from './db-interface/ip2location.js';
+import {MaxMindOptions} from './db-interface/maxmind.js';
+import {GwaDbiForTesting} from './db-interface/for-testing.js';
 
 const LOG_TAG = 'GwaDb';
 
