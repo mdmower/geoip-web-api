@@ -72,7 +72,7 @@ class GwaMaxMind implements DbInterface {
       if (!mmResult) {
         throw new Error('MaxMind database search returned empty result');
       }
-    } catch (ex) {
+    } catch {
       this.log_.error(`[${LOG_TAG}] Failed to search database for IP: ${ip}`);
       return null;
     }
@@ -95,7 +95,7 @@ class GwaMaxMind implements DbInterface {
         return null;
       }
 
-      return mmResult.country?.iso_code?.trim() || '';
+      return mmResult.country?.iso_code?.trim() ?? '';
     }
 
     if (output === 'subdivision') {

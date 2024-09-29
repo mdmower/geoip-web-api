@@ -25,17 +25,17 @@ describe('Log', () => {
   it('logs to console', () => {
     const consoleArgs = ['message', new Error('error')];
     gwaLog.debug(...consoleArgs);
-    expect(debugMock).toBeCalledWith(...consoleArgs);
+    expect(debugMock).toHaveBeenCalledWith(...consoleArgs);
     gwaLog.info(...consoleArgs);
-    expect(infoMock).toBeCalledWith(...consoleArgs);
+    expect(infoMock).toHaveBeenCalledWith(...consoleArgs);
     gwaLog.warn(...consoleArgs);
-    expect(warnMock).toBeCalledWith(...consoleArgs);
+    expect(warnMock).toHaveBeenCalledWith(...consoleArgs);
     gwaLog.error(...consoleArgs);
-    expect(errorMock).toBeCalledWith(...consoleArgs);
-    expect(debugMock).toBeCalledTimes(1);
-    expect(infoMock).toBeCalledTimes(1);
-    expect(warnMock).toBeCalledTimes(1);
-    expect(errorMock).toBeCalledTimes(1);
+    expect(errorMock).toHaveBeenCalledWith(...consoleArgs);
+    expect(debugMock).toHaveBeenCalledTimes(1);
+    expect(infoMock).toHaveBeenCalledTimes(1);
+    expect(warnMock).toHaveBeenCalledTimes(1);
+    expect(errorMock).toHaveBeenCalledTimes(1);
   });
 
   it('supports changing log level', () => {
@@ -45,7 +45,7 @@ describe('Log', () => {
     gwaLog.setLevel(LogLevel.ERROR);
     gwaLog.debug(...consoleArgs);
     gwaLog.error(...consoleArgs);
-    expect(debugMock).toBeCalledTimes(1);
-    expect(errorMock).toBeCalledTimes(2);
+    expect(debugMock).toHaveBeenCalledTimes(1);
+    expect(errorMock).toHaveBeenCalledTimes(2);
   });
 });

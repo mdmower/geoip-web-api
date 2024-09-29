@@ -26,7 +26,7 @@ class GwaCli {
       const configPath = config.replace(/^['"\s]|['"\s]$/g, '');
       try {
         options = this.getUserOptions(expandTildePath(configPath));
-      } catch (ex) {
+      } catch {
         throw new Error(`Failed to read custom config at ${configPath}`);
       }
     } else {
@@ -35,10 +35,10 @@ class GwaCli {
 
     // Verify database available and exit early if not
     const {maxMindOptions, ip2LocationOptions} = options.dbOptions;
-    const dbPath = maxMindOptions?.dbPath || ip2LocationOptions?.dbPath || '';
+    const dbPath = maxMindOptions?.dbPath ?? ip2LocationOptions?.dbPath ?? '';
     try {
       assertPath(dbPath);
-    } catch (ex) {
+    } catch {
       throw new Error(`Could not read database at ${dbPath}`);
     }
 

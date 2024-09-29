@@ -98,16 +98,15 @@ export default class GwaCors {
     return (
       Boolean(origin) &&
       ((Array.isArray(this.origins_) && this.origins_.includes(origin)) ||
-        (this.originRegEx_ != null && this.originRegEx_.test(origin)))
+        !!this.originRegEx_?.test(origin))
     );
   }
 
   /**
    * Get CORS headers (if appropriate) for origin
-   * @param {string|undefined} origin Origin header value from HTTP request
-   * @returns {?Object.<string, string>}
+   * @param origin Origin header value from HTTP request
    */
-  public getCorsHeaders(origin?: string): {[header: string]: string} | null {
+  public getCorsHeaders(origin?: string): Record<string, string> | null {
     return origin && this.isCorsOrigin(origin)
       ? {
           'Access-Control-Allow-Origin': origin,

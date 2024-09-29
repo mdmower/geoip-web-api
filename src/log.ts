@@ -13,7 +13,7 @@ class GwaLog {
    * @param level Log level
    */
   constructor(level?: LogLevel) {
-    this.level_ = level !== undefined ? level : LogLevel.INFO;
+    this.level_ = level ?? LogLevel.INFO;
   }
 
   /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -64,7 +64,7 @@ class GwaLog {
 
   /**
    * Set log level
-   * @param {LogLevel} level Log level
+   * @param level Log level
    */
   public setLevel(level: LogLevel): void {
     this.level_ = level;

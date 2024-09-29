@@ -23,7 +23,7 @@ interface AppOptions {
   prettyOutput?: boolean;
 
   /** Dictionary of HTTP response headers for GET requests */
-  getHeaders?: {[header: string]: string | null | undefined};
+  getHeaders?: Record<string, string | null | undefined>;
 
   /** Array of paths to match for GET requests */
   getPaths?: string[];
@@ -70,9 +70,7 @@ class DefaultOptions {
   }
 
   /** Port where HTTP server should listen */
-  public static get port(): number {
-    return 3000;
-  }
+  public static readonly port = 3000;
 
   /** Individual outputs that should be included in the response */
   public static get enabledOutputs(): EnabledOutputs {
@@ -86,14 +84,12 @@ class DefaultOptions {
   }
 
   /** Pretty JSON output */
-  public static get prettyOutput(): boolean {
-    return false;
-  }
+  public static readonly prettyOutput = false;
 
   // Suggested headers for AMP-GEO fallback API:
   // https://github.com/ampproject/amphtml/blob/master/spec/amp-framework-hosting.md#amp-geo-fallback-api
   /** Dictionary of HTTP response headers for GET requests */
-  public static get getHeaders(): {[header: string]: string | null | undefined} {
+  public static get getHeaders(): Record<string, string | null | undefined> {
     return {};
   }
 

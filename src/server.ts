@@ -33,7 +33,7 @@ class GwaServer {
   private prettyOutput_: boolean;
   private db_: GwaDb;
   private port_: number;
-  private getHeaders_: {[header: string]: string | null | undefined};
+  private getHeaders_: Record<string, string | null | undefined>;
   private getPaths_: string[];
   private server_?: Server;
   private express_: express.Express;

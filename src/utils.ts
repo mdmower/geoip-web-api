@@ -8,7 +8,7 @@ import {LogLevel} from './log.js';
  * @param path Filesystem path
  */
 function expandTildePath(path: string): string {
-  if (!path || path[0] !== '~' || sep !== '/') {
+  if (!path || !path.startsWith('~') || sep !== '/') {
     return path;
   }
 

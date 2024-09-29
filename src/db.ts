@@ -72,7 +72,7 @@ export default class GwaDb {
 
   /**
    * Identify and construct relevant DB interface
-   * @param {DbOptions} gwaDbOptions Database and reader options
+   * @param gwaDbOptions Database and reader options
    */
   private getDbInterface(gwaDbOptions: DbOptions): DbInterface {
     if (gwaDbOptions.dbProvider === DbProvider.MAXMIND) {
@@ -94,7 +94,7 @@ export default class GwaDb {
 
   /**
    * Get database result for ip
-   * @param {string} ip IPv4 or IPv6 address to lookup
+   * @param ip IPv4 or IPv6 address to lookup
    */
   public async lookup(ip: string): Promise<LookupResponse> {
     const ipVersion = isIP(ip);
@@ -144,10 +144,10 @@ export default class GwaDb {
     this.enabledOutputs_.forEach((output) => {
       switch (output) {
         case 'ip':
-          ret[output] = ip || '';
+          ret[output] = ip ?? '';
           break;
         case 'ip_version':
-          ret[output] = ipVersion || 0;
+          ret[output] = ipVersion ?? 0;
           break;
         case 'country':
         case 'subdivision': {

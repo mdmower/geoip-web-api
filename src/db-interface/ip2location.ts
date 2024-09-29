@@ -77,7 +77,7 @@ class GwaIP2Location implements DbInterface {
       if (!ip2lResult) {
         throw new Error('IP2Location database search returned empty result');
       }
-    } catch (ex) {
+    } catch {
       this.log_.error(`[${LOG_TAG}] Failed to search database for IP: ${ip}`);
       return null;
     }
@@ -99,14 +99,14 @@ class GwaIP2Location implements DbInterface {
       if (!('country_short' in ip2lResult)) {
         return null;
       }
-      return ip2lResult.country_short || '';
+      return ip2lResult.country_short ?? '';
     }
 
     if (output === 'subdivision') {
       if (!('subdivision' in ip2lResult)) {
         return null;
       }
-      return ip2lResult.subdivision || '';
+      return ip2lResult.subdivision ?? '';
     }
 
     return null;

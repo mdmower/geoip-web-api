@@ -8,7 +8,7 @@ interface ForTestingData {
   subdivision?: string;
 }
 
-const SampleResults: {[key: string]: ForTestingData | undefined} = {
+const SampleResults: Record<string, ForTestingData | undefined> = {
   '8.8.8.8': {country: 'us', subdivision: 'ca'},
   '2001:4860:4860::8888': {country: 'us', subdivision: 'ca'},
   '127.0.0.1': {country: '', subdivision: ''},
@@ -39,7 +39,7 @@ class GwaDbiForTesting implements DbInterface {
       this.log_.debug(`[${LOG_TAG}] Database loaded`);
     }
 
-    return SampleResults[ip] || {country: '', subdivision: ''};
+    return SampleResults[ip] ?? {country: '', subdivision: ''};
   }
 
   /**
@@ -56,14 +56,14 @@ class GwaDbiForTesting implements DbInterface {
       if (!('country' in forTestingResult)) {
         return null;
       }
-      return forTestingResult.country || '';
+      return forTestingResult.country;
     }
 
     if (output === 'subdivision') {
       if (!('subdivision' in forTestingResult)) {
         return null;
       }
-      return forTestingResult.subdivision || '';
+      return forTestingResult.subdivision ?? '';
     }
 
     return null;
