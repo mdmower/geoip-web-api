@@ -5,14 +5,13 @@
   "type": "module",
   "scripts": {
     "build": "npm run lint && npm run clean && npm run compile",
-    "build-release": "npm run lint && npm run clean && npm run compile-release",
     "clean": "rimraf lib",
-    "compile": "tsc --build tsconfig.json",
-    "compile-release": "tsc --build tsconfig.release.json",
+    "compile:debug": "tsc --build tsconfig.dev.json",
+    "compile": "tsc",
     "debug": "node --inspect-brk lib/cli.js",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint .",
-    "prepare": "npm run clean && npm run compile-release",
+    "prepare": "npm run clean && npm run compile",
     "start": "node lib/cli.js",
     "test": "jest"
   },
