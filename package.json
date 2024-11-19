@@ -6,9 +6,9 @@
   "scripts": {
     "build": "npm run lint && npm run clean && npm run compile",
     "clean": "rimraf lib",
-    "compile:debug": "tsc --build tsconfig.dev.json",
     "compile": "tsc",
-    "debug": "node --inspect-brk lib/cli.js",
+    "compile:debug": "tsc --build tsconfig.dev.json",
+    "dev": "tsx --watch src/cli.ts --config config.dev.json",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint .",
     "prepare": "npm run clean && npm run compile",
@@ -85,6 +85,7 @@
     "prettier": "^3.3.3",
     "rimraf": "^6.0.1",
     "ts-jest": "^29.2.5",
+    "tsx": "^4.19.2",
     "typescript": "~5.6.3",
     "typescript-eslint": "^8.15.0"
   }

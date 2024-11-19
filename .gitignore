@@ -107,3 +107,4 @@ dist
 lib/
 .vscode/
 GeoLite2-*.mmdb
+config.dev.json
