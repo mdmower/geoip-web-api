@@ -135,9 +135,7 @@ class GwaServer {
     }
 
     // Make sure a response body is available
-    if (!geoIpApiResponse) {
-      geoIpApiResponse = this.db_.geoIpApiResponse(null, null, null);
-    }
+    geoIpApiResponse ??= this.db_.geoIpApiResponse(null, null, null);
 
     // Set CORS headers
     const corsHeaders = this.cors_.getCorsHeaders(req.get('origin'));
