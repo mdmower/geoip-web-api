@@ -1,7 +1,7 @@
-import {DbProvider} from './db.js';
-import {overlayOptions, AppOptions} from './options.js';
-import {LogLevel} from './log.js';
-import {typedKeys} from './utils.js';
+import {DbProvider} from '../src/db.js';
+import {overlayOptions, AppOptions} from '../src/options.js';
+import {LogLevel} from '../src/log.js';
+import {typedKeys} from '../src/utils.js';
 
 describe('Parse options', () => {
   it('parses valid options', () => {

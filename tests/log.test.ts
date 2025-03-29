@@ -1,17 +1,18 @@
-import {GwaLog, LogLevel} from './log.js';
+import {MockInstance} from 'vitest';
+import {GwaLog, LogLevel} from '../src/log.js';
 
 describe('Log', () => {
   let gwaLog: GwaLog;
-  let debugMock: jest.SpyInstance;
-  let infoMock: jest.SpyInstance;
-  let warnMock: jest.SpyInstance;
-  let errorMock: jest.SpyInstance;
+  let debugMock: MockInstance;
+  let infoMock: MockInstance;
+  let warnMock: MockInstance;
+  let errorMock: MockInstance;
 
   beforeEach(() => {
-    debugMock = jest.spyOn(global.console, 'debug').mockImplementation();
-    infoMock = jest.spyOn(global.console, 'log').mockImplementation();
-    warnMock = jest.spyOn(global.console, 'warn').mockImplementation();
-    errorMock = jest.spyOn(global.console, 'error').mockImplementation();
+    debugMock = vitest.spyOn(global.console, 'debug').mockImplementation(() => undefined);
+    infoMock = vitest.spyOn(global.console, 'log').mockImplementation(() => undefined);
+    warnMock = vitest.spyOn(global.console, 'warn').mockImplementation(() => undefined);
+    errorMock = vitest.spyOn(global.console, 'error').mockImplementation(() => undefined);
     gwaLog = new GwaLog(LogLevel.DEBUG);
   });
 

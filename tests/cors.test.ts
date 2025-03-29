@@ -1,5 +1,5 @@
-import {GwaCors} from './cors.js';
-import {GwaLog, LogLevel} from './log.js';
+import {GwaCors} from '../src/cors.js';
+import {GwaLog, LogLevel} from '../src/log.js';
 
 describe('CORS', () => {
   let gwaLog: GwaLog;

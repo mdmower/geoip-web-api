@@ -1,14 +1,14 @@
-import {GwaDb, DbProvider} from './db.js';
-import {SampleResults} from './db-interface/for-testing.js';
-import {GwaLog, LogLevel} from './log.js';
-import {DefaultOptions} from './options.js';
+import {GwaDb, DbProvider} from '../src/db.js';
+import {SampleResults} from '../src/db-interface/for-testing.js';
+import {GwaLog, LogLevel} from '../src/log.js';
+import {DefaultOptions} from '../src/options.js';
 
 describe('Database', () => {
   let gwaLog: GwaLog;
   let sampleIps: string[];
 
   beforeAll(() => {
-    jest.useFakeTimers();
+    vitest.useFakeTimers();
     gwaLog = new GwaLog(LogLevel.OFF);
     sampleIps = Object.keys(SampleResults);
   });
@@ -18,7 +18,7 @@ describe('Database', () => {
     const enabledOutputs = Object.keys(DefaultOptions.enabledOutputs);
     const gwaDb = new GwaDb(gwaLog, {dbProvider: DbProvider.FORTESTING}, enabledOutputs);
     const lookupResultPromise = gwaDb.lookup(sampleIp);
-    jest.runOnlyPendingTimers();
+    vitest.runOnlyPendingTimers();
     const lookupResult = await lookupResultPromise;
     expect(lookupResult).toEqual({
       error: null,
@@ -37,7 +37,7 @@ describe('Database', () => {
     const enabledOutputs = Object.keys(DefaultOptions.enabledOutputs);
     const gwaDb = new GwaDb(gwaLog, {dbProvider: DbProvider.FORTESTING}, enabledOutputs);
     const lookupResultPromise = gwaDb.lookup(sampleIp);
-    jest.runOnlyPendingTimers();
+    vitest.runOnlyPendingTimers();
     const lookupResult = await lookupResultPromise;
     expect(lookupResult).toEqual({
       error: null,
@@ -56,7 +56,7 @@ describe('Database', () => {
     let enabledOutputs = ['country', 'subdivision'];
     let gwaDb = new GwaDb(gwaLog, {dbProvider: DbProvider.FORTESTING}, enabledOutputs);
     let lookupResultPromise = gwaDb.lookup(sampleIp);
-    jest.runOnlyPendingTimers();
+    vitest.runOnlyPendingTimers();
     let lookupResult = await lookupResultPromise;
     expect(lookupResult).toEqual({
       error: null,
@@ -68,7 +68,7 @@ describe('Database', () => {
     enabledOutputs = ['data', 'ip', 'ip_version'];
     gwaDb = new GwaDb(gwaLog, {dbProvider: DbProvider.FORTESTING}, enabledOutputs);
     lookupResultPromise = gwaDb.lookup(sampleIp);
-    jest.runOnlyPendingTimers();
+    vitest.runOnlyPendingTimers();
     lookupResult = await lookupResultPromise;
     expect(lookupResult).toEqual({
       error: null,
