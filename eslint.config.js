@@ -31,7 +31,7 @@ export default tseslint.config(
     languageOptions: {
       parserOptions: {
         sourceType: 'module',
-        project: true,
+        projectService: true,
       },
     },
     rules: {
