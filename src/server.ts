@@ -150,7 +150,7 @@ class GwaServer {
    * Initialize Express server and start listeners
    */
   public async start(): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       if (this.server_) {
         this.log_.debug(`[${LOG_TAG}] Server appears to be running already`);
         return resolve();
@@ -161,9 +161,14 @@ class GwaServer {
           this.log_.error(`[${LOG_TAG}] GET handler encountered an exception\n`, err);
         });
       });
-      this.server_ = this.express_.listen(this.port_, () => {
-        this.log_.info(`[${LOG_TAG}] Listening at http://localhost:${this.port_}`);
-        resolve();
+      this.server_ = this.express_.listen(this.port_, (error) => {
+        if (error) {
+          this.log_.error(`[${LOG_TAG}] Failed to start server`);
+          reject(error);
+        } else {
+          this.log_.info(`[${LOG_TAG}] Listening at http://localhost:${this.port_}`);
+          resolve();
+        }
       });
     });
   }

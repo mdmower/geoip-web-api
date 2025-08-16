@@ -129,7 +129,7 @@ When running this module as a command line application, these options should be 
     "cache-control": "private, max-age=3600",
     "X-Content-Type-Options": "nosniff"
   },
-  "getPaths": ["/geoip/?"],
+  "getPaths": ["/geoip"],
   "cors": {
     "origins": ["http://example.com", "http://example.net"],
     "originRegEx": "^https://[a-z0-9\\-]+\\.example\\.(com|net)$"

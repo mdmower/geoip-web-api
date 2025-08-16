@@ -41,14 +41,14 @@
   },
   "homepage": "https://github.com/mdmower/geoip-web-api#readme",
   "dependencies": {
-    "express": "^4.21.2",
+    "express": "^5.1.0",
     "ip2ldb-reader": "^3.0.3",
     "maxmind": "^4.3.24",
     "minimist": "^1.2.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.23.0",
-    "@types/express": "^5.0.1",
+    "@types/express": "^5.0.3",
     "@types/minimist": "^1.2.5",
     "@types/node": "^20.19.11",
     "@vitest/eslint-plugin": "^1.1.38",
