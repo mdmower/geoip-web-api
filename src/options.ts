@@ -95,7 +95,7 @@ class DefaultOptions {
 
   /** Array of paths to match for GET requests */
   public static get getPaths(): string[] {
-    return ['/', '/*'];
+    return ['/{*splat}'];
   }
 
   /** Allowed CORS origin tests */
