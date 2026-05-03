@@ -1,5 +1,4 @@
-// @ts-check
-
+import {defineConfig} from 'eslint/config';
 import eslint from '@eslint/js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
@@ -7,7 +6,7 @@ import jsdoc from 'eslint-plugin-jsdoc';
 import vitest from '@vitest/eslint-plugin';
 import prettierConfigRecommended from 'eslint-plugin-prettier/recommended';
 
-export default tseslint.config(
+export default defineConfig(
   {
     ignores: ['lib/'],
   },
@@ -22,10 +21,6 @@ export default tseslint.config(
   },
   ...tseslint.configs.recommendedTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
-  {
-    files: ['eslint.config.js'],
-    ...tseslint.configs.disableTypeChecked,
-  },
   {
     files: ['**/*.ts'],
     languageOptions: {

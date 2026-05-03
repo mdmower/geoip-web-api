@@ -81,8 +81,8 @@ function isLogLevel(value: unknown): value is LogLevel {
   return (
     typeof value === 'number' &&
     Math.floor(value) === value &&
-    value >= (LogLevel.OFF as number) &&
-    value <= (LogLevel.DEBUG as number)
+    value >= LogLevel.OFF.valueOf() &&
+    value <= LogLevel.DEBUG.valueOf()
   );
 }
 
