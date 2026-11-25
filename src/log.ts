@@ -16,8 +16,8 @@ class GwaLog {
     this.level_ = level ?? LogLevel.INFO;
   }
 
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  /* eslint-disable prefer-spread */
+  /* oxlint-disable typescript/no-explicit-any */
+  /* oxlint-disable prefer-spread */
 
   /**
    * Log debug message
@@ -59,8 +59,8 @@ class GwaLog {
     }
   }
 
-  /* eslint-enable @typescript-eslint/no-explicit-any */
-  /* eslint-enable prefer-spread */
+  /* oxlint-enable typescript/no-explicit-any */
+  /* oxlint-enable prefer-spread */
 
   /**
    * Set log level
